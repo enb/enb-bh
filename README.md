@@ -10,7 +10,7 @@ enb-bh [![NPM version](https://badge.fury.io/js/enb-bh.svg)](http://badge.fury.i
 npm install --save-dev enb-bh
 ```
 
-Для работы модуля требуется зависимость от пакета `enb` версии 0.8.22 или выше.
+Для работы модуля требуется зависимость от пакета enb версии 0.12.0 или выше.
 
 bh-client
 =========
