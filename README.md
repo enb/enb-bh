@@ -10,7 +10,7 @@ enb-bh [![NPM version](https://badge.fury.io/js/enb-bh.svg)](http://badge.fury.i
 npm install --save-dev enb-bh
 ```
 
-Для работы модуля требуется зависимость от пакета `enb` версии 0.8.22 или выше.
+Для работы модуля требуется зависимость от пакета enb версии 0.12.0 или выше.
 
 bh-client
 =========
@@ -94,9 +94,9 @@ html-from-bemjson
 
 **Опции**
 
-* *String* **bhTarget** — Исходный BH-файл. По умолчанию — `?.bh.js`.
-* *String* **bemjsonTarget** — Исходный BEMJSON-файл. По умолчанию — `?.bemjson.js`.
-* *String* **destTarget** — Результирующий HTML-файл. По умолчанию — `?.html`.
+* *String* **bhFile** — Исходный BH-файл. По умолчанию — `?.bh.js`.
+* *String* **bemjsonFile** — Исходный BEMJSON-файл. По умолчанию — `?.bemjson.js`.
+* *String* **target** — Результирующий HTML-файл. По умолчанию — `?.html`.
 
 **Пример**
 ```javascript

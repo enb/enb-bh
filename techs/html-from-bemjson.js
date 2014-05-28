@@ -6,9 +6,9 @@
  *
  * **Опции**
  *
- * * *String* **bhTarget** — Исходный BH-файл. По умолчанию — `?.bh.js`.
- * * *String* **bemjsonTarget** — Исходный BEMJSON-файл. По умолчанию — `?.bemjson.js`.
- * * *String* **destTarget** — Результирующий HTML-файл. По умолчанию — `?.html`.
+ * * *String* **bhFile** — Исходный BH-файл. По умолчанию — `?.bh.js`.
+ * * *String* **bemjsonFile** — Исходный BEMJSON-файл. По умолчанию — `?.bemjson.js`.
+ * * *String* **target** — Результирующий HTML-файл. По умолчанию — `?.html`.
  *
  * **Пример**
  *
@@ -22,9 +22,12 @@ var dropRequireCache = require('enb/lib/fs/drop-require-cache');
 
 module.exports = require('enb/lib/build-flow').create()
     .name('html-from-bemjson')
-    .target('destTarget', '?.html')
-    .useSourceFilename('bhTarget', '?.bh.js')
-    .useSourceFilename('bemjsonTarget', '?.bemjson.js')
+    .target('target', '?.html')
+    .useSourceFilename('bhFile', '?.bh.js')
+    .useSourceFilename('bemjsonFile', '?.bemjson.js')
+    .optionAlias('bhFile', 'bhTarget')
+    .optionAlias('bemjsonFile', 'bemjsonTarget')
+    .optionAlias('target', 'destTarget')
     .builder(function (bhFilename, bemjsonFilename) {
         dropRequireCache(require, bemjsonFilename);
         return requireOrEval(bemjsonFilename).then(function (json) {
