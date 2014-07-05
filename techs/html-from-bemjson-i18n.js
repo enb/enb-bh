@@ -43,10 +43,10 @@ module.exports = require('enb/lib/build-flow').create()
             cache.needRebuildFile('bemjson-file', this.node.resolvePath(this._bemjsonFile)) ||
             cache.needRebuildFile('allLang-file', this.node.resolvePath(this._langAllFile)) ||
             cache.needRebuildFile('lang-file', this.node.resolvePath(this._langFile)) ||
-            cache.needRebuildFile('html-file', this.node.resolvePath(this._destFile));
+            cache.needRebuildFile('html-file', this.node.resolvePath(this._target));
     })
     .saveCache(function (cache) {
-        cache.cacheFileInfo('bh-file', this.node.resolvePath(this._bemhtmlFile));
+        cache.cacheFileInfo('bh-file', this.node.resolvePath(this._bhFile));
         cache.cacheFileInfo('bemjson-file', this.node.resolvePath(this._bemjsonFile));
         cache.cacheFileInfo('allLang-file', this.node.resolvePath(this._langAllFile));
         cache.cacheFileInfo('lang-file', this.node.resolvePath(this._langFile));
