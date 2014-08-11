@@ -24,6 +24,9 @@
  * nodeConfig.addTech(require('enb-bh/techs/bh-server'));
  * ```
  */
+
+var path = require('path');
+
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-server')
     .target('target', '?.bh.js')
@@ -32,8 +35,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('jsAttrScheme', 'js')
     .useFileList(['bh.js'])
     .needRebuild(function (cache) {
-        this._bhFile = this._bhFile || 'node_modules/bh/lib/bh.js';
-        this._bhFile = this.node._root + '/' + this._bhFile;
+        this._bhFile = this._bhFile ? path.join(this.node._root, this._bhFile) : require.resolve('bh/lib/bh.js');
         return cache.needRebuildFile('bh-file', this._bhFile);
     })
     .saveCache(function (cache) {
