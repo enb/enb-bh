@@ -3,13 +3,13 @@
   "description": "BH support for ENB",
   "name": "enb-bh",
   "version": "0.2.1",
-  "repository": "git://github.com/enb-make/enb-bh",
-  "homepage": "https://github.com/enb-make/enb-bh",
-  "bugs": "https://github.com/enb-make/enb-bh/issues",
+  "repository": "git://github.com/enb-bem/enb-bh",
+  "homepage": "https://github.com/enb-bem/enb-bh",
+  "bugs": "https://github.com/enb-bem/enb-bh/issues",
   "licenses": [
     {
       "type": "MIT",
-      "url": "https://github.com/enb-make/enb-bh/blob/master/LICENSE"
+      "url": "https://github.com/enb-bem/enb-bh/blob/master/LICENSE"
     }
   ],
   "contributors": [

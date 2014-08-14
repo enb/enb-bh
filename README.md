@@ -1,4 +1,4 @@
-enb-bh [![NPM version](https://badge.fury.io/js/enb-bh.svg)](http://badge.fury.io/js/enb-bh) [![Build Status](https://travis-ci.org/enb-make/enb-bh.svg?branch=master)](https://travis-ci.org/enb-make/enb-bh) [![Dependency Status](https://gemnasium.com/enb-make/enb-bh.svg)](https://gemnasium.com/enb-make/enb-bh)
+enb-bh [![NPM version](https://badge.fury.io/js/enb-bh.svg)](http://badge.fury.io/js/enb-bh) [![Build Status](https://travis-ci.org/enb-bem/enb-bh.svg?branch=master)](https://travis-ci.org/enb-bem/enb-bh) [![Dependency Status](https://gemnasium.com/enb-bem/enb-bh.svg)](https://gemnasium.com/enb-bem/enb-bh)
 ======
 
 Поддержка [`bh`](https://github.com/enb-make/bh) для ENB.
