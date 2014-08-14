@@ -6,14 +6,23 @@ enb-bh [![NPM version](https://badge.fury.io/js/enb-bh.svg)](http://badge.fury.i
 Установка:
 ----------
 
-```
-npm install --save-dev enb-bh
+```sh
+$ npm install --save-dev enb-bh
 ```
 
-Для работы модуля требуется зависимость от пакета enb версии 0.12.0 или выше.
+Технологии
+----------
 
-bh-client
-=========
+* [bh-client](#bh-client)
+* [bh-client-module](#bh-client-module)
+* [bh-server](#bh-server)
+* [bh-server-include](#bh-server-include)
+* [html-from-bemjson](#html-from-bemjson)
+* [html-from-bemjson-i18n](#html-from-bemjson-i18n)
+
+Для работы модуля требуется зависимость от пакета `enb` версии `0.12.0` или выше.
+
+### bh-client
 
 Склеивает `bh`-файлы по deps'ам в виде `?.bh.client.js`. Предназначен для сборки клиентского BH-кода.
 
@@ -31,8 +40,7 @@ bh-client
 nodeConfig.addTech(require('enb-bh/techs/bh-client'));
 ```
 
-bh-client-module
-================
+### bh-client-module
 
 Склеивает `bh`-файлы по deps'ам в виде `?.bh.client.js`. Предназначен для сборки клиентского BH-кода. Использует модульную обертку.
 
@@ -50,8 +58,7 @@ bh-client-module
 nodeConfig.addTech(require('enb-bh/techs/bh-client-module'));
 ```
 
-bh-server
-=========
+### bh-server
 
 Склеивает *bh*-файлы по deps'ам с помощью набора `require` в виде `?.bh.js`. Предназначен для сборки серверного BH-кода. После сборки требуется наличия всех файлов, подключённых с помощью набора `require`.
 
@@ -68,8 +75,7 @@ bh-server
 nodeConfig.addTech(require('enb-bh/techs/bh-server'));
 ```
 
-bh-server-include
-=================
+### bh-server-include
 
 Склеивает `bh`-файлы по deps'ам в виде `?.bh.js`. Предназначен для сборки серверного BH-кода. Предполагается, что в `bh`-файлах не используется `require`.
 
@@ -87,8 +93,7 @@ bh-server-include
 nodeConfig.addTech(require('enb-bh/techs/bh-server-include'));
 ```
 
-html-from-bemjson
-=================
+### html-from-bemjson
 
 Собирает *html*-файл с помощью *bemjson* и *bh*.
 
@@ -103,8 +108,7 @@ html-from-bemjson
 nodeConfig.addTech(require('enb-bh/techs/html-from-bemjson'));
 ```
 
-html-from-bemjson-i18n
-======================
+### html-from-bemjson-i18n
 
 Собирает *html*-файл с помощью *bemjson*, *bh*, *lang.all* и *lang.{lang}*.
 
@@ -119,19 +123,4 @@ html-from-bemjson-i18n
 **Пример**
 ```javascript
 nodeConfig.addTech(require('enb-bh/techs/html-from-bemjson-i18n'));
-```
-
-История изменений
------------------
-
-История изменений на [отдельной странице](/CHANGELOG.md).
-
-Разработка
-----------
-Руководство на [отдельной странице](/CONTRIBUTION.md).
-
-Запуск тестов
--------------
-```
-$ npm test
 ```
