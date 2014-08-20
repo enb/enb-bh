@@ -26,6 +26,7 @@
 
 var vow = require('vow');
 var vfs = require('enb/lib/fs/async-fs');
+var path = require('path');
 var bhClientProcessor = require('../lib/bh-client-processor');
 
 module.exports = require('enb/lib/build-flow').create()
@@ -36,8 +37,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('jsAttrScheme', 'js')
     .useFileList(['bh.js'])
     .needRebuild(function (cache) {
-        this._bhFile = this._bhFile || 'node_modules/bh/lib/bh.js';
-        this._bhFile = this.node._root + '/' + this._bhFile;
+        this._bhFile = this._bhFile ? path.join(this.node._root, this._bhFile) : require.resolve('bh/lib/bh.js');
         return cache.needRebuildFile('bh-file', this._bhFile);
     })
     .saveCache(function (cache) {
