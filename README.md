@@ -72,7 +72,8 @@ nodeConfig.addTech(require('enb-bh/techs/bh-client-module'));
 * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `onclick`.
 * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `js`. Форматы: `js` — Получаем `return { ... }`. `json` — JSON-формат. Получаем `{ ... }`.
 
-***Пример**
+**Пример**
+
 ```javascript
 nodeConfig.addTech(require('enb-bh/techs/bh-server'));
 ```
@@ -106,6 +107,7 @@ nodeConfig.addTech(require('enb-bh/techs/bh-server-include'));
 * *String* **target** — Результирующий HTML-файл. По умолчанию — `?.html`.
 
 **Пример**
+
 ```javascript
 nodeConfig.addTech(require('enb-bh/techs/html-from-bemjson'));
 ```
@@ -123,6 +125,7 @@ nodeConfig.addTech(require('enb-bh/techs/html-from-bemjson'));
 * *String* **target** — Результирующий HTML-файл. По умолчанию — `?.{lang}.html`.
 
 **Пример**
+
 ```javascript
 nodeConfig.addTech(require('enb-bh/techs/html-from-bemjson-i18n'));
 ```
