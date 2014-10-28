@@ -129,3 +129,8 @@ nodeConfig.addTech(require('enb-bh/techs/html-from-bemjson'));
 ```javascript
 nodeConfig.addTech(require('enb-bh/techs/html-from-bemjson-i18n'));
 ```
+
+Лицензия
+--------
+
+© 2014 YANDEX LLC. Код лицензирован [Mozilla Public License 2.0](LICENSE.txt).
