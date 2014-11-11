@@ -34,8 +34,8 @@
     "bh": ">= 1.0.0 < 4.0.0"
   },
   "dependencies": {
-    "enb-source-map": "^1.4.1",
-    "vow": "0.4.5"
+    "enb-source-map": "1.4.1",
+    "vow": "0.4.7"
   },
   "devDependencies": {
     "enb": ">= 0.12.0 < 1.0.0",
