@@ -23,10 +23,10 @@
  * ```
  */
 
-var vow = require('vow');
-var path = require('path');
-var bhClientProcessor = require('../lib/bh-client-processor');
-var readFile = require('../lib/util').readFile;
+var vow = require('vow'),
+    path = require('path'),
+    bhClientProcessor = require('../lib/bh-client-processor'),
+    readFile = require('../lib/util').readFile;
 
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-client')
@@ -45,31 +45,33 @@ module.exports = require('enb/lib/build-flow').create()
         cache.cacheFileInfo('bh-file', this._bhFile);
     })
     .builder(function (bhFiles) {
-        var node = this.node;
-        var dependencies = this._dependencies;
-        var jsAttrName = this._jsAttrName;
-        var jsAttrScheme = this._jsAttrScheme;
-        var useSourceMap = this._useSourceMap;
-        var targetPath = node.resolvePath(this._target);
+        var node = this.node,
+            dependencies = this._dependencies,
+            jsAttrName = this._jsAttrName,
+            jsAttrScheme = this._jsAttrScheme,
+            useSourceMap = this._useSourceMap,
+            targetPath = node.resolvePath(this._target);
+
         return vow.all([
             readFile(this._bhFile),
             vow.all(bhFiles.map(function (file) {
                 return readFile(file.fullname).then(function (data) {
                     data.content = bhClientProcessor.process(data.content);
                     data.relPath = node.relativePath(file.fullname);
+
                     return data;
                 });
             }))
         ]).spread(function (bhEngine, inputSources) {
             return bhClientProcessor.build(
-                    targetPath,
-                    bhEngine,
-                    inputSources,
-                    dependencies,
-                    jsAttrName,
-                    jsAttrScheme,
-                    useSourceMap
-                ).render();
+                targetPath,
+                bhEngine,
+                inputSources,
+                dependencies,
+                jsAttrName,
+                jsAttrScheme,
+                useSourceMap
+            ).render();
         });
     })
     .createTech();

@@ -1,12 +1,11 @@
 {
     "bitwise": true,
-    "curly": true,
     "eqeqeq": true,
     "es3": true,
     "forin": true,
     "freeze": true,
     "immed": true,
-    "latedef": true,
+    "latedef": "nofucn",
     "noarg": true,
     "noempty": true,
     "nonbsp": true,

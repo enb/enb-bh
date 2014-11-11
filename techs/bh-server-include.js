@@ -24,10 +24,10 @@
  * ```
  */
 
-var vow = require('vow');
-var path = require('path');
-var bhClientProcessor = require('../lib/bh-client-processor');
-var readFile = require('../lib/util').readFile;
+var vow = require('vow'),
+    path = require('path'),
+    bhClientProcessor = require('../lib/bh-client-processor'),
+    readFile = require('../lib/util').readFile;
 
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-server-include')
@@ -39,18 +39,19 @@ module.exports = require('enb/lib/build-flow').create()
     .useFileList(['bh.js'])
     .needRebuild(function (cache) {
         this._bhFile = this._bhFile ? path.join(this.node._root, this._bhFile) : require.resolve('bh/lib/bh.js');
+
         return cache.needRebuildFile('bh-file', this._bhFile);
     })
     .saveCache(function (cache) {
         cache.cacheFileInfo('bh-file', this._bhFile);
     })
     .builder(function (bhFiles) {
-        var node = this.node;
-        var dependencies = {};
-        var jsAttrName = this._jsAttrName;
-        var jsAttrScheme = this._jsAttrScheme;
-        var useSourceMap = this._useSourceMap;
-        var targetPath = node.resolvePath(this._target);
+        var node = this.node,
+            dependencies = {},
+            jsAttrName = this._jsAttrName,
+            jsAttrScheme = this._jsAttrScheme,
+            useSourceMap = this._useSourceMap,
+            targetPath = node.resolvePath(this._target);
         return vow.all([
             readFile(this._bhFile),
             vow.all(bhFiles.map(function (file) {
@@ -61,8 +62,18 @@ module.exports = require('enb/lib/build-flow').create()
                 });
             }))
         ]).spread(function (bhEngine, inputSources) {
-            var file = bhClientProcessor.build(targetPath, bhEngine, inputSources, dependencies, jsAttrName, jsAttrScheme, useSourceMap);
+            var file = bhClientProcessor.build(
+                targetPath,
+                bhEngine,
+                inputSources,
+                dependencies,
+                jsAttrName,
+                jsAttrScheme,
+                useSourceMap
+            );
+
             file.writeLine('module.exports = bh;');
+
             return file.render();
         });
     })

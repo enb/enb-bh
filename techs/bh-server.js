@@ -36,6 +36,7 @@ module.exports = require('enb/lib/build-flow').create()
     .useFileList(['bh.js'])
     .needRebuild(function (cache) {
         this._bhFile = this._bhFile ? path.join(this.node._root, this._bhFile) : require.resolve('bh/lib/bh.js');
+
         return cache.needRebuildFile('bh-file', this._bhFile);
     })
     .saveCache(function (cache) {
@@ -52,6 +53,7 @@ module.exports = require('enb/lib/build-flow').create()
          */
         function buildRequire(absPath, pre, post) {
             var relPath = node.relativePath(absPath);
+
             return [
                 'dropRequireCache(require, require.resolve("' + relPath + '"));',
                 (pre || '') + 'require("' + relPath + '")' + (post || '') + ';'
