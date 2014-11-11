@@ -25,9 +25,9 @@
  */
 
 var vow = require('vow');
-var vfs = require('enb/lib/fs/async-fs');
 var path = require('path');
 var bhClientProcessor = require('../lib/bh-client-processor');
+var readFile = require('../lib/util').readFile;
 
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-server-include')
@@ -35,6 +35,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('bhFile', '')
     .defineOption('jsAttrName', 'onclick')
     .defineOption('jsAttrScheme', 'js')
+    .defineOption('useSourceMap', false)
     .useFileList(['bh.js'])
     .needRebuild(function (cache) {
         this._bhFile = this._bhFile ? path.join(this.node._root, this._bhFile) : require.resolve('bh/lib/bh.js');
@@ -48,25 +49,21 @@ module.exports = require('enb/lib/build-flow').create()
         var dependencies = {};
         var jsAttrName = this._jsAttrName;
         var jsAttrScheme = this._jsAttrScheme;
+        var useSourceMap = this._useSourceMap;
+        var targetPath = node.resolvePath(this._target);
         return vow.all([
-            vfs.read(this._bhFile, 'utf8').then(function (data) {
-                return data;
-            }),
+            readFile(this._bhFile),
             vow.all(bhFiles.map(function (file) {
-                return vfs.read(file.fullname, 'utf8').then(function (data) {
-                    var relPath = node.relativePath(file.fullname);
-                    return '// begin: ' + relPath + '\n' +
-                        bhClientProcessor.process(data) + '\n' +
-                        '// end: ' + relPath + '\n';
+                return readFile(file.fullname).then(function (data) {
+                    data.content = bhClientProcessor.process(data.content);
+                    data.relPath = node.relativePath(file.fullname);
+                    return data;
                 });
-            })).then(function (sr) {
-                return sr.join('\n');
-            })
-        ]).spread(function (bhEngineSource, inputSources) {
-            return [
-                bhClientProcessor.build(bhEngineSource, inputSources, dependencies, jsAttrName, jsAttrScheme),
-                'module.exports = bh;'
-            ].join('\n');
+            }))
+        ]).spread(function (bhEngine, inputSources) {
+            var file = bhClientProcessor.build(targetPath, bhEngine, inputSources, dependencies, jsAttrName, jsAttrScheme, useSourceMap);
+            file.writeLine('module.exports = bh;');
+            return file.render();
         });
     })
     .createTech();
