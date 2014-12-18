@@ -84,12 +84,14 @@ module.exports = require('enb/lib/build-flow').create()
             buildRequire(this._bhFile, 'var BH = '),
             'var bh = new BH();',
             'bh.setOptions({',
-                'jsAttrName: \'' + this._jsAttrName + '\',',
-                'jsAttrScheme: \'' + this._jsAttrScheme + '\'',
-            '})',
+            '   jsAttrName: \'' + this._jsAttrName + '\',',
+            '   jsAttrScheme: \'' + this._jsAttrScheme + '\'',
+            '});',
+            '',
             bhFiles.map(function (file) {
                 return buildRequire(file.fullname, '', '(bh)');
             }).join('\n'),
+            '',
             'module.exports = bh;'
         ].join('\n');
     })
