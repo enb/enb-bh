@@ -34,14 +34,14 @@
     "bh": ">= 1.0.0 < 4.0.0"
   },
   "dependencies": {
-    "enb-source-map": "1.4.1",
+    "enb-source-map": "1.5.0",
     "vow": "0.4.7"
   },
   "devDependencies": {
-    "enb": ">= 0.12.0 < 1.0.0",
     "bh": ">= 1.0.0 < 4.0.0",
-    "jshint": "2.5.10",
-    "jscs": "1.7.3"
+    "enb": ">= 0.12.0 < 1.0.0",
+    "jscs": "1.8.1",
+    "jshint": "2.5.11"
   },
   "scripts": {
     "test": "npm run lint",
