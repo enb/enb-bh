@@ -33,6 +33,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('bhFile', '')
     .defineOption('jsAttrName', 'onclick')
     .defineOption('jsAttrScheme', 'js')
+    .defineOption('jsCls', 'i-bem')
     .useFileList(['bh.js'])
     .needRebuild(function (cache) {
         this._bhFile = this._bhFile ? path.join(this.node._root, this._bhFile) : require.resolve('bh/lib/bh.js');
@@ -86,6 +87,7 @@ module.exports = require('enb/lib/build-flow').create()
             'bh.setOptions({',
             '   jsAttrName: \'' + this._jsAttrName + '\',',
             '   jsAttrScheme: \'' + this._jsAttrScheme + '\'',
+            '   jsCls: \'' + this._jsCls + '\'',
             '});',
             '',
             bhFiles.map(function (file) {

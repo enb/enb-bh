@@ -36,6 +36,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('bhFile', '')
     .defineOption('jsAttrName', 'onclick')
     .defineOption('jsAttrScheme', 'js')
+    .defineOption('jsCls', 'i-bem')
     .defineOption('sourcemap', false)
     .useFileList(['bh.js'])
     .needRebuild(function (cache) {
@@ -51,6 +52,7 @@ module.exports = require('enb/lib/build-flow').create()
             dependencies = {},
             jsAttrName = this._jsAttrName,
             jsAttrScheme = this._jsAttrScheme,
+            jsCls = this._jsCls,
             sourcemap = this._sourcemap,
             targetPath = node.resolvePath(this._target);
         return vow.all([
@@ -70,6 +72,7 @@ module.exports = require('enb/lib/build-flow').create()
                 dependencies,
                 jsAttrName,
                 jsAttrScheme,
+                jsCls,
                 sourcemap
             );
 
