@@ -41,10 +41,14 @@
     "bh": ">= 1.0.0 < 4.0.0",
     "enb": ">= 0.12.0 < 1.0.0",
     "jscs": "1.8.1",
-    "jshint": "2.5.11"
+    "jshint": "2.5.11",
+    "mock-fs": "2.5.0",
+    "must": "0.12.0",
+    "mocha": "2.2.4"
   },
   "scripts": {
-    "test": "npm run lint",
-    "lint": "jshint . && jscs -c .jscs.js ."
+    "test": "npm run lint && npm run unit",
+    "lint": "jshint . && jscs -c .jscs.js .",
+    "unit": "mocha test/techs/*.test.js"
   }
 }
