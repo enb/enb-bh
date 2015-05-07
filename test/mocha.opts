@@ -2,3 +2,4 @@ test/**/*.test.js
 --ui bdd
 --reporter spec
 --require must
+--no-timeouts
