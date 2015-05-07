@@ -3,7 +3,8 @@ var fs = require('fs'),
     TestNode = require('enb/lib/test/mocks/test-node'),
     bhServerInclude = require('../../techs/bh-server-include'),
     FileList = require('enb/lib/file-list'),
-    bhCoreFilename = require.resolve('bh/lib/bh.js');
+    bhCoreFilename = require.resolve('bh/lib/bh.js'),
+    writeFile = require('../lib/write-file');
 
 describe('bh-server-include', function () {
     var mockBhCore = [
@@ -177,11 +178,12 @@ describe('bh-server-include', function () {
 
             return bundle.runTech(bhServerInclude)
                 .then(function () {
-                    fs.writeFileSync(
+                    return writeFile(
                         'blocks/block.bh.js',
                         bhWrap('bh.match("block", function(ctx) {ctx.tag("b");});')
                     );
-
+                })
+                .then(function () {
                     fileList = new FileList();
                     fileList.loadFromDirSync('blocks');
                     bundle.provideTechData('?.files', fileList);
