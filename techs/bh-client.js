@@ -11,7 +11,7 @@
  *   (его предоставляет технология `files`). По умолчанию — `?.files`.
  * * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — ['bh'].
  * * *Boolean* **sourcemap** — строить карты кода.
- * * *String* **mimic** — имя переменной для экспорта.
+ * * *String|Array* **mimic** — имена переменных для экспорта.
  * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `onclick`.
  * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `js`.
  * *                             Форматы:
@@ -35,7 +35,7 @@ module.exports = require('enb/lib/build-flow').create()
     .target('target', '?.bh.client.js')
     .defineOption('bhFile', '')
     .defineOption('dependencies', {})
-    .defineOption('mimic')
+    .defineOption('mimic', [])
     .defineOption('jsAttrName', 'onclick')
     .defineOption('jsAttrScheme', 'js')
     .defineOption('sourcemap', false)

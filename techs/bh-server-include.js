@@ -12,6 +12,7 @@
  *   (его предоставляет технология `files`). По умолчанию — `?.files`.
  * * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — ['bh'].
  * * *Boolean* **sourcemap** — строить карты кода.
+ * * *String|Array* **mimic** — имена модулей для экспорта.
  * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `onclick`.
  * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `js`.
  * *                             Форматы:
@@ -34,6 +35,7 @@ module.exports = require('enb/lib/build-flow').create()
     .name('bh-server-include')
     .target('target', '?.bh.js')
     .defineOption('bhFile', '')
+    .defineOption('mimic', [])
     .defineOption('jsAttrName', 'onclick')
     .defineOption('jsAttrScheme', 'js')
     .defineOption('sourcemap', false)
@@ -49,6 +51,7 @@ module.exports = require('enb/lib/build-flow').create()
     .builder(function (bhFiles) {
         var node = this.node,
             dependencies = {},
+            mimic = this._mimic,
             jsAttrName = this._jsAttrName,
             jsAttrScheme = this._jsAttrScheme,
             sourcemap = this._sourcemap,
@@ -74,6 +77,12 @@ module.exports = require('enb/lib/build-flow').create()
             );
 
             file.writeLine('module.exports = bh;');
+
+            if (mimic) {
+                [].concat(mimic).forEach(function (name) {
+                    file.writeLine('bh[\'' + name + '\'] = bh;');
+                });
+            }
 
             return file.render();
         });
