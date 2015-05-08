@@ -9,7 +9,7 @@ module.exports = function () {
     setTimeout(function () {
         fs.writeFileSync.apply(fs, args);
         defer.resolve();
-    }, 1);
+    }, 10);
 
     return defer.promise();
 };
