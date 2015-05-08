@@ -81,6 +81,30 @@ describe('bh-server-include', function () {
         return assert(bemjson, html, templates);
     });
 
+    describe('mimic', function () {
+        it('mimic to BEMHTML', function () {
+            var templates = [
+                'bh.match("block", function(ctx) {ctx.tag("a");});'
+            ],
+            bemjson = { block: 'block' },
+            html = '<a class="block"></a>',
+            options = { mimic: 'BEMHTML' };
+
+            return assert(bemjson, html, templates, options);
+        });
+
+        it('mimic as an array', function () {
+            var templates = [
+                'bh.match("block", function(ctx) {ctx.tag("a");});'
+            ],
+            bemjson = { block: 'block' },
+            html = '<a class="block"></a>',
+            options = { mimic: ['BH', 'BEMHTML'] };
+
+            return assert(bemjson, html, templates, options);
+        });
+    });
+
     describe('caches', function () {
         it('must use cached bhFile', function () {
             var scheme = {
@@ -254,5 +278,9 @@ function assert(bemjson, html, templates, options) {
     return bundle.runTechAndRequire(bhServerInclude, options)
         .spread(function (bh) {
             bh.apply(bemjson).must.be(html);
+
+            options && options.mimic && [].concat(options.mimic).forEach(function (name) {
+                bh[name].apply(bemjson).must.be(html);
+            });
         });
 }

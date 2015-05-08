@@ -12,6 +12,7 @@
  * * *String* **filesTarget** — files-таргет, на основе которого получается список исходных файлов
  *   (его предоставляет технология `files`). По умолчанию — `?.files`.
  * * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — ['bh.js'].
+ * * *String|Array* **mimic** — имена модулей для экспорта.
  * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `onclick`.
  * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `js`.
  * *                             Форматы:
@@ -31,6 +32,7 @@ module.exports = require('enb/lib/build-flow').create()
     .name('bh-server')
     .target('target', '?.bh.js')
     .defineOption('bhFile', '')
+    .defineOption('mimic', [])
     .defineOption('jsAttrName', 'onclick')
     .defineOption('jsAttrScheme', 'js')
     .useFileList(['bh.js'])
@@ -97,7 +99,10 @@ module.exports = require('enb/lib/build-flow').create()
                 return buildRequire(file.fullname, '', '(bh)');
             }).join('\n'),
             '',
-            'module.exports = bh;'
+            'module.exports = bh;',
+            this._mimic ? [].concat(this._mimic).map(function (name) {
+                return 'bh[\'' + name + '\'] = bh;';
+            }).join('\n') : ''
         ].join('\n');
     })
     .createTech();
