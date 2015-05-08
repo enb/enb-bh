@@ -54,6 +54,11 @@ module.exports = require('enb/lib/build-flow').create()
         function buildRequire(absPath, pre, post) {
             var relPath = node.relativePath(absPath);
 
+            // Replace slashes with backslashes for windows paths for correct require work.
+            if (relPath.indexOf('\\') !== -1) {
+                relPath = relPath.replace(/\\/g, '/');
+            }
+
             return [
                 'dropRequireCache(require, require.resolve("' + relPath + '"));',
                 (pre || '') + 'require("' + relPath + '")' + (post || '') + ';'
