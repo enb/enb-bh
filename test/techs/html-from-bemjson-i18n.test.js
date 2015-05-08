@@ -1,7 +1,7 @@
-var fs = require('fs'),
-    mock = require('mock-fs'),
+var mock = require('mock-fs'),
     TestNode = require('enb/lib/test/mocks/test-node'),
-    htmlFromBemjsonI18N = require('../../techs/html-from-bemjson-i18n');
+    htmlFromBemjsonI18N = require('../../techs/html-from-bemjson-i18n'),
+    writeFile = require('../lib/write-file');
 
 describe('html-from-bemjson-i18n', function () {
     var bundle, i18n;
@@ -61,11 +61,12 @@ describe('html-from-bemjson-i18n', function () {
             return bundle.runTech(
                     htmlFromBemjsonI18N, { lang: 'ru' }
                 ).then(function () {
-                    fs.writeFileSync(
+                    return writeFile(
                         'bundle/bundle.bemjson.js',
                         '({ block: "anotherBlock" })'
                     );
-
+                })
+                .then(function () {
                     return bundle.runTechAndGetContent(htmlFromBemjsonI18N, { lang: 'ru' });
                 })
                 .spread(function (html) {
@@ -91,11 +92,12 @@ describe('html-from-bemjson-i18n', function () {
             return bundle.runTech(
                     htmlFromBemjsonI18N, { lang: 'ru' }
                 ).then(function () {
-                    fs.writeFileSync(
+                    return writeFile(
                         'bundle/bundle.bh.js',
                         'exports.apply = function(bemjson) { return "<html>o_o</html>"; };'
                     );
-
+                })
+                .then(function () {
                     return bundle.runTechAndGetContent(htmlFromBemjsonI18N, { lang: 'ru' });
                 })
                 .spread(function (html) {

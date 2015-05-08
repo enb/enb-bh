@@ -1,7 +1,7 @@
-var fs = require('fs'),
-    mock = require('mock-fs'),
+var mock = require('mock-fs'),
     TestNode = require('enb/lib/test/mocks/test-node'),
-    htmlFromBemjson = require('../../techs/html-from-bemjson');
+    htmlFromBemjson = require('../../techs/html-from-bemjson'),
+    writeFile = require('../lib/write-file');
 
 describe('html-from-bemjson', function () {
     var bundle;
@@ -45,11 +45,12 @@ describe('html-from-bemjson', function () {
 
             return bundle.runTech(htmlFromBemjson)
                 .spread(function () {
-                    fs.writeFileSync(
+                    return writeFile(
                         'bundle/bundle.bemjson.js',
                         '({ block: "anotherBlock" })'
                     );
-
+                })
+                .then(function () {
                     return bundle.runTechAndGetContent(htmlFromBemjson);
                 })
                 .spread(function (html) {
@@ -72,11 +73,12 @@ describe('html-from-bemjson', function () {
 
             return bundle.runTech(htmlFromBemjson)
                 .then(function () {
-                    fs.writeFileSync(
+                    return writeFile(
                         'bundle/bundle.bh.js',
                         'exports.apply = function(bemjson) { return "<html>o_o</html>"; };'
                     );
-
+                })
+                .then(function () {
                     return bundle.runTechAndGetContent(htmlFromBemjson);
                 })
                 .spread(function (html) {

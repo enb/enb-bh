@@ -3,6 +3,10 @@ var fs = require('fs'),
     vow = require('vow'),
     mock = require('mock-fs'),
     promisify = require('vow-node').promisify,
+    exec = require('child_process').exec,
+    http = require('http'),
+    serveStatic = require('serve-static'),
+    finalhandler = require('finalhandler'),
     TestNode = require('enb/lib/test/mocks/test-node'),
     FileList = require('enb/lib/file-list'),
     bhClient = require('../../techs/bh-client'),
@@ -10,10 +14,7 @@ var fs = require('fs'),
     htmlFilename = path.join(__dirname, '..', 'fixtures', 'bh-client', 'index.html'),
     mochaFilename = require.resolve('mocha/mocha.js'),
     chaiFilename = require.resolve('chai/chai.js'),
-    exec = require('child_process').exec,
-    http = require('http'),
-    serveStatic = require('serve-static'),
-    finalhandler = require('finalhandler'),
+    writeFile = require('../lib/write-file'),
     serve, server, listen;
 
 describe('bh-client', function () {
@@ -256,11 +257,12 @@ describe('bh-client', function () {
 
             return bundle.runTech(bhClient)
                 .then(function () {
-                    fs.writeFileSync(
+                    return writeFile(
                         'blocks/block.bh.js',
                         bhWrap('bh.match("block", function(ctx) {ctx.tag("b");});')
                     );
-
+                })
+                .then(function () {
                     fileList = new FileList();
                     fileList.loadFromDirSync('blocks');
                     bundle.provideTechData('?.files', fileList);
