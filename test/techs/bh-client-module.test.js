@@ -118,7 +118,8 @@ describe('bh-client-module', function () {
                 'index.html': fs.readFileSync(htmlFilename, 'utf-8'),
                 'mocha.js': fs.readFileSync(mochaFilename, 'utf-8'),
                 'chai.js': fs.readFileSync(chaiFilename, 'utf-8'),
-                'ym.js': fs.readFileSync(ymFilename, 'utf-8')
+                'ym.js': fs.readFileSync(ymFilename, 'utf-8'),
+                'some-ym-lib.js': ''
             };
         });
 
@@ -258,9 +259,7 @@ function runTest(testContent, options, template, lib) {
         options.bhFile = 'bh.js';
     }
 
-    if (lib) {
-        scheme['some-ym-lib.js'] = lib;
-    }
+    scheme['some-ym-lib.js'] = lib || '';
 
     scheme[bhCoreFilename] = fs.readFileSync(bhCoreFilename, 'utf-8');
 
