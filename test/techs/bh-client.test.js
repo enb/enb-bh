@@ -1,9 +1,7 @@
 var fs = require('fs'),
     path = require('path'),
-    vow = require('vow'),
     mock = require('mock-fs'),
     promisify = require('vow-node').promisify,
-    exec = require('child_process').exec,
     http = require('http'),
     serveStatic = require('serve-static'),
     finalhandler = require('finalhandler'),
@@ -15,6 +13,7 @@ var fs = require('fs'),
     mochaFilename = require.resolve('mocha/mocha.js'),
     chaiFilename = require.resolve('chai/chai.js'),
     writeFile = require('../lib/write-file'),
+    runPhantom = require('../lib/run-phantom'),
     serve, server, listen;
 
 describe('bh-client', function () {
@@ -196,7 +195,9 @@ describe('bh-client', function () {
 
                     return listen(3000);
                 })
-                .then(runPhantom)
+                .then(function () {
+                    return runPhantom('http://localhost:3000/index.html');
+                })
                 .fail(function (err) {
                     throw err;
                 });
@@ -237,7 +238,9 @@ describe('bh-client', function () {
 
                     return listen(3000);
                 })
-                .then(runPhantom)
+                .then(function () {
+                    return runPhantom('http://localhost:3000/index.html');
+                })
                 .fail(function (err) {
                     throw err;
                 });
@@ -275,7 +278,9 @@ describe('bh-client', function () {
 
                     return listen(3000);
                 })
-                .then(runPhantom)
+                .then(function () {
+                    return runPhantom('http://localhost:3000/index.html');
+                })
                 .fail(function (err) {
                     throw err;
                 });
@@ -324,7 +329,9 @@ function runTest(testContent, options, template) {
 
             return listen(3000);
         })
-        .then(runPhantom)
+        .then(function () {
+            return runPhantom('http://localhost:3000/index.html');
+        })
         .then(function () {
             server.close();
         })
@@ -342,35 +349,4 @@ function generateTest(json, result) {
             '})',
         '})'
     ].join('\n');
-}
-
-function runPhantom() {
-    var defer = vow.defer();
-
-    exec(
-        'node_modules/mocha-phantomjs/bin/mocha-phantomjs --reporter json http://localhost:3000/index.html',
-        function (err, stdout) {
-            if (err) {
-                var json = JSON.parse(stdout),
-                    errors = json.tests.filter(function (test) {
-                        return test.err;
-                    }),
-                    testError = errors[0].err;
-
-                if (testError) {
-                    var stack = testError.stack;
-                    testError = new Error(testError.message);
-                    testError.stack = stack;
-                } else {
-                    testError = err;
-                }
-
-                defer.reject(testError);
-            } else {
-                defer.resolve();
-            }
-        }
-    );
-
-    return defer.promise();
 }
