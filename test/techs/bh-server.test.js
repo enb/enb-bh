@@ -72,13 +72,13 @@ describe('bh-server', function () {
             var templates = [
                     [
                         'bh.match("block", function(ctx) {',
-                            'var path = require("path");',
-                            'ctx.content(path.join("fake", "path"));',
+                            'var url = require("url");',
+                            'ctx.content(url.resolve("http://example.com/", "/pathname"));',
                         '});'
                     ].join('\n')
                 ],
                 bemjson = { block: 'block' },
-                html = '<div class="block">fake/path</div>';
+                html = '<div class="block">http://example.com/pathname</div>';
 
             return assert(bemjson, html, templates);
         });
