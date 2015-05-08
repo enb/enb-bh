@@ -1,10 +1,6 @@
 var fs = require('fs'),
     path = require('path'),
     mock = require('mock-fs'),
-    promisify = require('vow-node').promisify,
-    http = require('http'),
-    serveStatic = require('serve-static'),
-    finalhandler = require('finalhandler'),
     TestNode = require('enb/lib/test/mocks/test-node'),
     FileList = require('enb/lib/file-list'),
     bhClientModule = require('../../techs/bh-client-module'),
@@ -14,20 +10,9 @@ var fs = require('fs'),
     chaiFilename = require.resolve('chai/chai.js'),
     ymFilename = require.resolve('ym/modules.js'),
     writeFile = require('../lib/write-file'),
-    runPhantom = require('../lib/run-phantom'),
-    serve, server, listen;
+    runServer = require('../lib/run-server');
 
 describe('bh-client-module', function () {
-    beforeEach(function () {
-        serve = serveStatic(process.cwd(), { index: false });
-        server = http.createServer(function (req, res) {
-            var done = finalhandler(req, res);
-
-            serve(req, res, done);
-        });
-        listen = promisify(server.listen.bind(server));
-    });
-
     afterEach(function () {
         mock.restore();
     });
@@ -117,31 +102,6 @@ describe('bh-client-module', function () {
        return runTest(test, options, template, lib);
     });
 
-    it('sourcemap', function () {
-        var options = {
-                sourcemap: true,
-                bhFile: 'bh.js'
-            },
-            scheme = {
-                blocks: {},
-                bundle: {},
-                'bh.js': 'module.exports = BH;'
-            },
-            bundle, fileList;
-
-        mock(scheme);
-
-        bundle = new TestNode('bundle');
-        fileList = new FileList();
-        fileList.loadFromDirSync('blocks');
-        bundle.provideTechData('?.files', fileList);
-
-        return bundle.runTechAndGetContent(bhClientModule, options)
-            .spread(function (bh) {
-                bh.toString().must.include('sourceMappingURL');
-            });
-    });
-
     describe('caches', function () {
         var mockBhCore, scheme, bundle, fileList;
 
@@ -158,12 +118,9 @@ describe('bh-client-module', function () {
                 'index.html': fs.readFileSync(htmlFilename, 'utf-8'),
                 'mocha.js': fs.readFileSync(mochaFilename, 'utf-8'),
                 'chai.js': fs.readFileSync(chaiFilename, 'utf-8'),
-                'ym.js': fs.readFileSync(ymFilename, 'utf-8')
+                'ym.js': fs.readFileSync(ymFilename, 'utf-8'),
+                'some-ym-lib.js': ''
             };
-        });
-
-        afterEach(function () {
-            server.close();
         });
 
         it('must use cached bhFile', function () {
@@ -196,16 +153,10 @@ describe('bh-client-module', function () {
                     return bundle.runTechAndGetContent(bhClientModule, { bhFile: 'mock.bh.js' });
                 })
                 .spread(function (bh) {
-                    fs.writeFileSync('bundle/bundle.bh.js', bh);
                     // TODO: удалить, когда пофиксится https://github.com/enb-make/enb/issues/224
+                    fs.writeFileSync('bundle/bundle.bh.js', bh);
 
-                    return listen(3000);
-                })
-                .then(function () {
-                    return runPhantom('http://localhost:3000/index.html');
-                })
-                .fail(function (err) {
-                    throw err;
+                    return runServer(3000);
                 });
         });
 
@@ -239,16 +190,10 @@ describe('bh-client-module', function () {
                     return bundle.runTechAndGetContent(bhClientModule, { bhFile: 'mock.bh.js' });
                 })
                 .spread(function (bh) {
-                    fs.writeFileSync('bundle/bundle.bh.js', bh);
                     // TODO: удалить, когда пофиксится https://github.com/enb-make/enb/issues/224
+                    fs.writeFileSync('bundle/bundle.bh.js', bh);
 
-                    return listen(3000);
-                })
-                .then(function () {
-                    return runPhantom('http://localhost:3000/index.html');
-                })
-                .fail(function (err) {
-                    throw err;
+                    return runServer(3000);
                 });
         });
 
@@ -279,16 +224,10 @@ describe('bh-client-module', function () {
                     return bundle.runTechAndGetContent(bhClientModule);
                 })
                 .spread(function (bh) {
-                    fs.writeFileSync('bundle/bundle.bh.js', bh);
                     // TODO: удалить, когда пофиксится https://github.com/enb-make/enb/issues/224
+                    fs.writeFileSync('bundle/bundle.bh.js', bh);
 
-                    return listen(3000);
-                })
-                .then(function () {
-                    return runPhantom('http://localhost:3000/index.html');
-                })
-                .fail(function (err) {
-                    throw err;
+                    return runServer(3000);
                 });
         });
     });
@@ -320,9 +259,7 @@ function runTest(testContent, options, template, lib) {
         options.bhFile = 'bh.js';
     }
 
-    if (lib) {
-        scheme['some-ym-lib.js'] = lib;
-    }
+    scheme['some-ym-lib.js'] = lib || '';
 
     scheme[bhCoreFilename] = fs.readFileSync(bhCoreFilename, 'utf-8');
 
@@ -335,19 +272,10 @@ function runTest(testContent, options, template, lib) {
 
     return bundle.runTechAndGetContent(bhClientModule, options)
         .spread(function (bh) {
-            fs.writeFileSync('bundle/bundle.bh.js', bh);
             // TODO: удалить, когда пофиксится https://github.com/enb-make/enb/issues/224
+            fs.writeFileSync('bundle/bundle.bh.js', bh);
 
-            return listen(3000);
-        })
-        .then(function () {
-            return runPhantom('http://localhost:3000/index.html');
-        })
-        .then(function () {
-            server.close();
-        })
-        .fail(function (err) {
-            throw err;
+            return runServer(3000);
         });
 }
 
@@ -364,4 +292,3 @@ function generateTest(json, result) {
             '});'
     ].join('\n');
 }
-

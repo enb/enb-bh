@@ -1,10 +1,6 @@
 var fs = require('fs'),
     path = require('path'),
     mock = require('mock-fs'),
-    promisify = require('vow-node').promisify,
-    http = require('http'),
-    serveStatic = require('serve-static'),
-    finalhandler = require('finalhandler'),
     TestNode = require('enb/lib/test/mocks/test-node'),
     FileList = require('enb/lib/file-list'),
     bhClient = require('../../techs/bh-client'),
@@ -13,20 +9,9 @@ var fs = require('fs'),
     mochaFilename = require.resolve('mocha/mocha.js'),
     chaiFilename = require.resolve('chai/chai.js'),
     writeFile = require('../lib/write-file'),
-    runPhantom = require('../lib/run-phantom'),
-    serve, server, listen;
+    runServer = require('../lib/run-server');
 
 describe('bh-client', function () {
-    beforeEach(function () {
-        serve = serveStatic(process.cwd(), { index: false });
-        server = http.createServer(function (req, res) {
-            var done = finalhandler(req, res);
-
-            serve(req, res, done);
-        });
-        listen = promisify(server.listen.bind(server));
-    });
-
     afterEach(function () {
         mock.restore();
     });
@@ -156,10 +141,6 @@ describe('bh-client', function () {
             };
         });
 
-        afterEach(function () {
-            server.close();
-        });
-
         it('must use cached bhFile', function () {
             scheme['test.js'] = generateTest({ block: 'block' }, '<div class="block"></div>');
 
@@ -190,16 +171,10 @@ describe('bh-client', function () {
                     return bundle.runTechAndGetContent(bhClient, { bhFile: 'mock.bh.js' });
                 })
                 .spread(function (bh) {
-                    fs.writeFileSync('bundle/bundle.bh.js', bh);
                     // TODO: удалить, когда пофиксится https://github.com/enb-make/enb/issues/224
+                    fs.writeFileSync('bundle/bundle.bh.js', bh);
 
-                    return listen(3000);
-                })
-                .then(function () {
-                    return runPhantom('http://localhost:3000/index.html');
-                })
-                .fail(function (err) {
-                    throw err;
+                    return runServer(3000);
                 });
         });
 
@@ -233,16 +208,10 @@ describe('bh-client', function () {
                     return bundle.runTechAndGetContent(bhClient, { bhFile: 'mock.bh.js' });
                 })
                 .spread(function (bh) {
-                    fs.writeFileSync('bundle/bundle.bh.js', bh);
                     // TODO: удалить, когда пофиксится https://github.com/enb-make/enb/issues/224
+                    fs.writeFileSync('bundle/bundle.bh.js', bh);
 
-                    return listen(3000);
-                })
-                .then(function () {
-                    return runPhantom('http://localhost:3000/index.html');
-                })
-                .fail(function (err) {
-                    throw err;
+                    return runServer(3000);
                 });
         });
 
@@ -273,16 +242,10 @@ describe('bh-client', function () {
                     return bundle.runTechAndGetContent(bhClient);
                 })
                 .spread(function (bh) {
-                    fs.writeFileSync('bundle/bundle.bh.js', bh);
                     // TODO: удалить, когда пофиксится https://github.com/enb-make/enb/issues/224
+                    fs.writeFileSync('bundle/bundle.bh.js', bh);
 
-                    return listen(3000);
-                })
-                .then(function () {
-                    return runPhantom('http://localhost:3000/index.html');
-                })
-                .fail(function (err) {
-                    throw err;
+                    return runServer(3000);
                 });
         });
     });
@@ -324,19 +287,10 @@ function runTest(testContent, options, template) {
 
     return bundle.runTechAndGetContent(bhClient, options)
         .spread(function (bh) {
-            fs.writeFileSync('bundle/bundle.bh.js', bh);
             // TODO: удалить, когда пофиксится https://github.com/enb-make/enb/issues/224
+            fs.writeFileSync('bundle/bundle.bh.js', bh);
 
-            return listen(3000);
-        })
-        .then(function () {
-            return runPhantom('http://localhost:3000/index.html');
-        })
-        .then(function () {
-            server.close();
-        })
-        .fail(function (err) {
-            throw err;
+            return runServer(3000);
         });
 }
 
