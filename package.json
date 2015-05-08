@@ -42,6 +42,7 @@
     "chai": "2.3.0",
     "enb": ">= 0.12.0 < 1.0.0",
     "finalhandler": "0.3.5",
+    "istanbul": "0.3.13",
     "jscs": "1.13.1",
     "jshint": "2.7.0",
     "mocha": "2.2.4",
@@ -56,6 +57,8 @@
   "scripts": {
     "test": "npm run lint && npm run unit",
     "lint": "jshint . && jscs -c .jscs.js .",
-    "unit": "mocha test/techs/*.test.js --no-timeouts"
+    "unit": "mocha -R spec",
+    "cover": "istanbul cover _mocha",
+    "coveralls": "npm i coveralls && npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
   }
 }
