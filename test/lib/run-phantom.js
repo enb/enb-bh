@@ -10,21 +10,25 @@ module.exports = function (page) {
     exec([phantomjsPath, mochaPhantomjsScriptPath, page, reporter].join(' '),
         function (err, stdout) {
             if (err) {
-                var json = JSON.parse(stdout),
-                    errors = json.tests.filter(function (test) {
-                        return test.err;
-                    }),
-                    testError = errors[0].err;
+                try {
+                    var json = JSON.parse(stdout),
+                        errors = json.tests.filter(function (test) {
+                            return test.err;
+                        }),
+                        testError = errors[0].err;
 
-                if (testError) {
-                    var stack = testError.stack;
-                    testError = new Error(testError.message);
-                    testError.stack = stack;
-                } else {
-                    testError = err;
+                    if (testError) {
+                        var stack = testError.stack;
+                        testError = new Error(testError.message);
+                        testError.stack = stack;
+                    } else {
+                        testError = err;
+                    }
+
+                    defer.reject(testError);
+                } catch (e) {
+                    defer.reject(err);
                 }
-
-                defer.reject(testError);
             } else {
                 defer.resolve();
             }
