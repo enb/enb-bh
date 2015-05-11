@@ -30,15 +30,14 @@
     "node": ">= 0.10.0"
   },
   "peerDependencies": {
-    "enb": ">= 0.12.0 < 1.0.0",
-    "bh": ">= 1.0.0 < 4.0.0"
+    "enb": ">= 0.12.0 < 1.0.0"
   },
   "dependencies": {
+    "bh": ">= 1.0.0 < 4.0.0",
     "enb-source-map": "1.5.0",
     "vow": "0.4.9"
   },
   "devDependencies": {
-    "bh": ">= 1.0.0 < 4.0.0",
     "chai": "2.3.0",
     "enb": ">= 0.12.0 < 1.0.0",
     "finalhandler": "0.3.5",
