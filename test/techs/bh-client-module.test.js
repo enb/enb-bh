@@ -82,7 +82,7 @@ describe('bh-client-module', function () {
         it('should use dafault jsAttrName and jsAttrScheme params', function () {
             var test = generateTest(
                 { block: 'block', js: true },
-                '<a class="block i-bem" onclick=\'return {"block":{}}\'></a>'
+                '<a class="block i-bem" data-bem=\'return {"block":{}}\'></a>'
             );
 
            return runTest(test);
@@ -91,10 +91,10 @@ describe('bh-client-module', function () {
         it('should use redefined jsAttrName param', function () {
             var test = generateTest(
                     { block: 'block', js: true },
-                    '<a class="block i-bem" data-bem=\'return {"block":{}}\'></a>'
+                    '<a class="block i-bem" onclick=\'return {"block":{}}\'></a>'
                 ),
                 options = {
-                    jsAttrName: 'data-bem'
+                    jsAttrName: 'onclick'
                 };
 
            return runTest(test, options);
@@ -103,7 +103,7 @@ describe('bh-client-module', function () {
         it('should use redefined jsAttrScheme param', function () {
             var test = generateTest(
                     { block: 'block', js: true },
-                    '<a class="block i-bem" onclick=\'{"block":{}}\'></a>'
+                    '<a class="block i-bem" data-bem=\'{"block":{}}\'></a>'
                 ),
                 options = {
                     jsAttrScheme: 'json'
