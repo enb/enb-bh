@@ -12,7 +12,7 @@
  * * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — ['bh'].
  * * *Boolean* **sourcemap** — строить карты кода.
  * * *String|Array* **mimic** — имена переменных для экспорта.
- * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `onclick`.
+ * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
  * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `js`.
  * *                             Форматы:
  * *                                `js` — Получаем `return { ... }`.
@@ -36,7 +36,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('bhFile', '')
     .defineOption('dependencies', {})
     .defineOption('mimic', [])
-    .defineOption('jsAttrName', 'onclick')
+    .defineOption('jsAttrName', 'data-bem')
     .defineOption('jsAttrScheme', 'js')
     .defineOption('sourcemap', false)
     .useFileList(['bh.js'])

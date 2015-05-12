@@ -13,7 +13,7 @@
  *   (его предоставляет технология `files`). По умолчанию — `?.files`.
  * * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — ['bh.js'].
  * * *String|Array* **mimic** — имена модулей для экспорта.
- * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `onclick`.
+ * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
  * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `js`.
  * *                             Форматы:
  * *                                `js` — значение по умолчанию. Получаем `return { ... }`.
@@ -33,7 +33,7 @@ module.exports = require('enb/lib/build-flow').create()
     .target('target', '?.bh.js')
     .defineOption('bhFile', '')
     .defineOption('mimic', [])
-    .defineOption('jsAttrName', 'onclick')
+    .defineOption('jsAttrName', 'data-bem')
     .defineOption('jsAttrScheme', 'js')
     .useFileList(['bh.js'])
     .needRebuild(function (cache) {

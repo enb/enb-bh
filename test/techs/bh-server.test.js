@@ -45,22 +45,22 @@ describe('bh-server', function () {
     describe('jsAttr params', function () {
         it('must apply default jsAttrName and jsAttrScheme params', function () {
             var bemjson = { block: 'block', js: true },
-                html = '<div class="block i-bem" onclick=\'return {"block":{}}\'></div>';
+                html = '<div class="block i-bem" data-bem=\'return {"block":{}}\'></div>';
 
             return assert(bemjson, html);
         });
 
         it('must redefine jsAttrName', function () {
             var bemjson = { block: 'block', js: true },
-                html = '<div class="block i-bem" data-bem=\'return {"block":{}}\'></div>',
-                options = { jsAttrName: 'data-bem' };
+                html = '<div class="block i-bem" onclick=\'return {"block":{}}\'></div>',
+                options = { jsAttrName: 'onclick' };
 
             return assert(bemjson, html, null, options);
         });
 
         it('must redefine jsAttrScheme', function () {
             var bemjson = { block: 'block', js: true },
-                html = '<div class="block i-bem" onclick=\'{"block":{}}\'></div>',
+                html = '<div class="block i-bem" data-bem=\'{"block":{}}\'></div>',
                 options = { jsAttrScheme: 'json' };
 
             return assert(bemjson, html, null, options);
