@@ -14,7 +14,7 @@
  * * *Boolean* **sourcemap** — строить карты кода.
  * * *String|Array* **mimic** — имена модулей для экспорта.
  * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
- * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `js`.
+ * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `json`.
  * *                             Форматы:
  * *                                `js` — Получаем `return { ... }`.
  * *                                `json` — JSON-формат. Получаем `{ ... }`.
@@ -37,7 +37,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('bhFile', '')
     .defineOption('mimic', [])
     .defineOption('jsAttrName', 'data-bem')
-    .defineOption('jsAttrScheme', 'js')
+    .defineOption('jsAttrScheme', 'json')
     .defineOption('sourcemap', false)
     .useFileList(['bh.js'])
     .needRebuild(function (cache) {

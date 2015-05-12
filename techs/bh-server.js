@@ -14,7 +14,7 @@
  * * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — ['bh.js'].
  * * *String|Array* **mimic** — имена модулей для экспорта.
  * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
- * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `js`.
+ * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `json`.
  * *                             Форматы:
  * *                                `js` — значение по умолчанию. Получаем `return { ... }`.
  * *                                `json` — JSON-формат. Получаем `{ ... }`.
@@ -34,7 +34,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('bhFile', '')
     .defineOption('mimic', [])
     .defineOption('jsAttrName', 'data-bem')
-    .defineOption('jsAttrScheme', 'js')
+    .defineOption('jsAttrScheme', 'json')
     .useFileList(['bh.js'])
     .needRebuild(function (cache) {
         this._bhFile = this._bhFile ? path.join(this.node._root, this._bhFile) : require.resolve('bh/lib/bh.js');
