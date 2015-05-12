@@ -35,7 +35,7 @@ $ npm install --save-dev enb-bh
 * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — `['bh.js']`.
 * *Boolean* **sourcemap** — строить карты кода.
 * *String|Array* **mimic** — имена переменных для экспорта.
-* *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `onclick`.
+* *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
 * *String* **jsAttrScheme** — Схема данных для параметров инициализации. По умолчанию — `js`. Форматы: `js` — Получаем `return { ... }`. `json` — JSON-формат. Получаем `{ ... }`.
 
 **Пример**
@@ -55,7 +55,7 @@ nodeConfig.addTech(require('enb-bh/techs/bh-client'));
 * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — `['bh.js']`.
 * *Boolean* **sourcemap** — строить карты кода.
 * *String|Array* **mimic** — имена модулей для экспорта.
-* *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `onclick`.
+* *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
 * *String* **jsAttrScheme** — Схема данных для параметров инициализации. По умолчанию — `js`. Форматы: `js` — Получаем `return { ... }`. `json` — JSON-формат. Получаем `{ ... }`.
 
 **Пример**
@@ -74,7 +74,7 @@ nodeConfig.addTech(require('enb-bh/techs/bh-client-module'));
 * *String* **filesTarget** — files-таргет, на основе которого получается список исходных файлов (его предоставляет технология `files`). По умолчанию — `?.files`.
 * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — `['bh.js']`.
 * *String|Array* **mimic** — имена переменных для экспорта.
-* *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `onclick`.
+* *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
 * *String* **jsAttrScheme** — Схема данных для параметров инициализации. По умолчанию — `js`. Форматы: `js` — Получаем `return { ... }`. `json` — JSON-формат. Получаем `{ ... }`.
 
 **Пример**
@@ -94,7 +94,7 @@ nodeConfig.addTech(require('enb-bh/techs/bh-server'));
 * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — `['bh.js']`.
 * *Boolean* **sourcemap** — строить карты кода.
 * *String|Array* **mimic** — имена переменных для экспорта.
-* *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `onclick`.
+* *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
 * *String* **jsAttrScheme** — Схема данных для параметров инициализации. По умолчанию — `js`. Форматы: `js` — Получаем `return { ... }`. `json` — JSON-формат. Получаем `{ ... }`.
 
 **Пример**
