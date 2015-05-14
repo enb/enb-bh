@@ -19,8 +19,8 @@ $ npm install --save-dev enb-bh
 * [bh-client-module](#bh-client-module)
 * [bh-server](#bh-server)
 * [bh-server-include](#bh-server-include)
-* [html-from-bemjson](#html-from-bemjson)
-* [html-from-bemjson-i18n](#html-from-bemjson-i18n)
+* [bemjson-to-html](#bemjson-to-html)
+* [bemjson-to-html-i18n](#bemjson-to-html-i18n)
 
 Для работы модуля требуется зависимость от пакета `enb` версии `0.12.0` или выше.
 
@@ -107,7 +107,7 @@ nodeConfig.addTech(require('enb-bh/techs/bh-server'));
 nodeConfig.addTech(require('enb-bh/techs/bh-server-include'));
 ```
 
-### html-from-bemjson
+### bemjson-to-html
 
 Собирает *html*-файл с помощью *bemjson* и *bh*.
 
@@ -120,10 +120,10 @@ nodeConfig.addTech(require('enb-bh/techs/bh-server-include'));
 **Пример**
 
 ```javascript
-nodeConfig.addTech(require('enb-bh/techs/html-from-bemjson'));
+nodeConfig.addTech(require('enb-bh/techs/bemjson-to-html'));
 ```
 
-### html-from-bemjson-i18n
+### bemjson-to-html-i18n
 
 Собирает *html*-файл с помощью *bemjson*, *bh*, *lang.all* и *lang.{lang}*.
 
@@ -138,7 +138,7 @@ nodeConfig.addTech(require('enb-bh/techs/html-from-bemjson'));
 **Пример**
 
 ```javascript
-nodeConfig.addTech(require('enb-bh/techs/html-from-bemjson-i18n'));
+nodeConfig.addTech(require('enb-bh/techs/bemjson-to-html-i18n'));
 ```
 
 Лицензия

@@ -1,5 +1,5 @@
 /**
- * html-from-bemjson-i18n
+ * bemjson-to-html-i18n
  * ======================
  *
  * Собирает *html*-файл с помощью *bemjson*, *bh*, *lang.all* и *lang.{lang}*.
@@ -16,7 +16,7 @@
  * **Пример**
  *
  * ```javascript
- * nodeConfig.addTech(require('enb-bh/techs/html-from-bemjson-i18n'));
+ * nodeConfig.addTech(require('enb-bh/techs/bemjson-to-html-i18n'));
  * ```
  */
 var vm = require('vm'),
@@ -27,7 +27,7 @@ var vm = require('vm'),
     dropRequireCache = require('enb/lib/fs/drop-require-cache');
 
 module.exports = require('enb/lib/build-flow').create()
-    .name('html-from-bemjson-i18n')
+    .name('bemjson-to-html-i18n')
     .target('target', '?.{lang}.html')
     .useSourceFilename('bhFile', '?.bh.js')
     .useSourceFilename('bemjsonFile', '?.bemjson.js')
