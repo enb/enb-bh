@@ -67,6 +67,39 @@ describe('bh-server-include', function () {
         });
     });
 
+    describe('jsCls', function () {
+        it('must use dafault value', function () {
+            var bemjson = { block: 'block', js: true },
+                html = '<div class="block i-bem" data-bem=\'{"block":{}}\'></div>';
+
+            return assert(bemjson, html);
+        });
+
+        it('must redefine jsCls value', function () {
+            var bemjson = { block: 'block', js: true },
+                html = '<div class="block js" data-bem=\'{"block":{}}\'></div>',
+                options = { jsCls: 'js' };
+
+            return assert(bemjson, html, null, options);
+        });
+
+        it('must remove i-bem CSS-class', function () {
+            var bemjson = { block: 'block', js: true },
+                html = '<div class="block" data-bem=\'{"block":{}}\'></div>',
+                options = { jsCls: false };
+
+            return assert(bemjson, html, null, options);
+        });
+
+        it('must remove i-bem CSS-class by empty value', function () {
+            var bemjson = { block: 'block', js: true },
+                html = '<div class="block" data-bem=\'{"block":{}}\'></div>',
+                options = { jsCls: '' };
+
+            return assert(bemjson, html, null, options);
+        });
+    });
+
     it('truly CommonJS', function () {
         var templates = [
                 [

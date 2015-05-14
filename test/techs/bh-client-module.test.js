@@ -113,6 +113,53 @@ describe('bh-client-module', function () {
         });
     });
 
+    describe('jsCls', function () {
+        it('must use dafault value', function () {
+            var test = generateTest(
+                { block: 'block', js: true },
+                '<a class="block i-bem" data-bem=\'{"block":{}}\'></a>'
+            );
+
+            return runTest(test);
+        });
+
+        it('must redefine jsCls value', function () {
+            var test = generateTest(
+                    { block: 'block', js: true },
+                    '<a class="block js" data-bem=\'{"block":{}}\'></a>'
+                ),
+                options = {
+                    jsCls: 'js'
+                };
+
+            return runTest(test, options);
+        });
+
+        it('must remove i-bem CSS-class', function () {
+            var test = generateTest(
+                    { block: 'block', js: true },
+                    '<a class="block" data-bem=\'{"block":{}}\'></a>'
+                ),
+                options = {
+                    jsCls: false
+                };
+
+            return runTest(test, options);
+        });
+
+        it('must remove i-bem CSS-class by empty value', function () {
+            var test = generateTest(
+                    { block: 'block', js: true },
+                    '<a class="block" data-bem=\'{"block":{}}\'></a>'
+                ),
+                options = {
+                    jsCls: ''
+                };
+
+            return runTest(test, options);
+        });
+    });
+
     it('dependencies', function () {
         var test = generateTest({ block: 'block' }, '<div class="block">^_^</div>'),
             options = {
