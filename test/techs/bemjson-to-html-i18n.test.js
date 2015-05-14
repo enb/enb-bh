@@ -1,21 +1,33 @@
 var mock = require('mock-fs'),
     TestNode = require('enb/lib/test/mocks/test-node'),
-    htmlFromBemjson = require('../../techs/html-from-bemjson'),
+    bemjsonToHtmlI18N = require('../../techs/bemjson-to-html-i18n'),
     writeFile = require('../lib/write-file');
 
-describe('html-from-bemjson', function () {
-    var bundle;
+describe('bemjson-to-html-i18n', function () {
+    var bundle, i18n;
+
+    beforeEach(function () {
+        i18n = [
+            'var BEM = {',
+            '    I18N: function () {',
+            '        return "i18n-key";',
+            '    }',
+            '};'
+        ].join('\n');
+    });
 
     afterEach(function () {
         mock.restore();
     });
 
-    it('must generate html', function () {
+    it('must generate html with i18n', function () {
         var scheme = {
             blocks: {},
             bundle: {
                 'bundle.bemjson.js': '({ block: "block" })',
-                'bundle.bh.js': 'exports.apply = function(bemjson) { return "<html>^_^</html>"; };'
+                'bundle.bh.js': 'exports.apply = function(bemjson) { return "<html>" + BEM.I18N() + "</html>"; };',
+                'bundle.lang.all.js': i18n,
+                'bundle.lang.ru.js': ''
             }
         };
 
@@ -23,10 +35,11 @@ describe('html-from-bemjson', function () {
 
         bundle = new TestNode('bundle');
 
-        return bundle.runTechAndGetContent(htmlFromBemjson)
-            .spread(function (html) {
-                html.toString().must.be('<html>^_^</html>');
-            });
+        return bundle.runTechAndGetContent(
+            bemjsonToHtmlI18N, { lang: 'ru' }
+        ).spread(function (html) {
+            html.toString().must.be('<html>i18n-key</html>');
+        });
     });
 
     describe('caches', function () {
@@ -35,7 +48,9 @@ describe('html-from-bemjson', function () {
                 blocks: {},
                 bundle: {
                     'bundle.bemjson.js': '({ block: "block" })',
-                    'bundle.bh.js': 'exports.apply = function(bemjson) { return "<html>" +bemjson.block+ "</html>"; };'
+                    'bundle.bh.js': 'exports.apply = function(bemjson) { return "<html>" +bemjson.block+ "</html>"; };',
+                    'bundle.lang.all.js': i18n,
+                    'bundle.lang.ru.js': ''
                 }
             };
 
@@ -43,15 +58,16 @@ describe('html-from-bemjson', function () {
 
             bundle = new TestNode('bundle');
 
-            return bundle.runTech(htmlFromBemjson)
-                .spread(function () {
+            return bundle.runTech(
+                    bemjsonToHtmlI18N, { lang: 'ru' }
+                ).then(function () {
                     return writeFile(
                         'bundle/bundle.bemjson.js',
                         '({ block: "anotherBlock" })'
                     );
                 })
                 .then(function () {
-                    return bundle.runTechAndGetContent(htmlFromBemjson);
+                    return bundle.runTechAndGetContent(bemjsonToHtmlI18N, { lang: 'ru' });
                 })
                 .spread(function (html) {
                     html.toString().must.be('<html>anotherBlock</html>');
@@ -63,7 +79,9 @@ describe('html-from-bemjson', function () {
                 blocks: {},
                 bundle: {
                     'bundle.bemjson.js': '({ block: "block" })',
-                    'bundle.bh.js': 'exports.apply = function(bemjson) { return "<html>^_^</html>"; };'
+                    'bundle.bh.js': 'exports.apply = function(bemjson) { return "<html>^_^</html>"; };',
+                    'bundle.lang.all.js': i18n,
+                    'bundle.lang.ru.js': ''
                 }
             };
 
@@ -71,15 +89,16 @@ describe('html-from-bemjson', function () {
 
             bundle = new TestNode('bundle');
 
-            return bundle.runTech(htmlFromBemjson)
-                .then(function () {
+            return bundle.runTech(
+                    bemjsonToHtmlI18N, { lang: 'ru' }
+                ).then(function () {
                     return writeFile(
                         'bundle/bundle.bh.js',
                         'exports.apply = function(bemjson) { return "<html>o_o</html>"; };'
                     );
                 })
                 .then(function () {
-                    return bundle.runTechAndGetContent(htmlFromBemjson);
+                    return bundle.runTechAndGetContent(bemjsonToHtmlI18N, { lang: 'ru' });
                 })
                 .spread(function (html) {
                     html.toString().must.be('<html>o_o</html>');
