@@ -18,6 +18,9 @@
  * *                                `js` — Получаем `return { ... }`.
  * *                                `json` — JSON-формат. Получаем `{ ... }`.
  *
+ * * *String|Boolean* **jsCls** — имя `i-bem` CSS-класса. По умолчанию - `i-bem`. Для того, чтобы класс
+ *    не добавлялся, следует указать значение `false` или пустую строку.
+ *
  * **Пример**
  *
  * ```javascript
@@ -38,6 +41,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('mimic', [])
     .defineOption('jsAttrName', 'data-bem')
     .defineOption('jsAttrScheme', 'json')
+    .defineOption('jsCls', 'i-bem')
     .defineOption('sourcemap', false)
     .useFileList(['bh.js'])
     .needRebuild(function (cache) {
@@ -52,6 +56,7 @@ module.exports = require('enb/lib/build-flow').create()
             dependencies = this._dependencies,
             jsAttrName = this._jsAttrName,
             jsAttrScheme = this._jsAttrScheme,
+            jsCls = this._jsCls,
             sourcemap = this._sourcemap,
             mimic = this._mimic,
             targetPath = node.resolvePath(this._target);
@@ -74,6 +79,7 @@ module.exports = require('enb/lib/build-flow').create()
                 dependencies,
                 jsAttrName,
                 jsAttrScheme,
+                jsCls,
                 sourcemap,
                 mimic
             ).render();
