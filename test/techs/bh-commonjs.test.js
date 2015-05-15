@@ -1,12 +1,12 @@
 var fs = require('fs'),
     mock = require('mock-fs'),
     TestNode = require('enb/lib/test/mocks/test-node'),
-    bhServer = require('../../techs/bh-server'),
+    bhServer = require('../../techs/bh-commonjs'),
     FileList = require('enb/lib/file-list'),
     bhCoreFilename = require.resolve('bh/lib/bh.js'),
     writeFile = require('../lib/write-file');
 
-describe('bh-server', function () {
+describe('bh-commonjs', function () {
     var mockBhCore = [
         'function BH () {}',
         'BH.prototype.apply = function() { return "^_^"; };',
