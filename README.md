@@ -15,18 +15,20 @@ $ npm install --save-dev enb-bh
 Технологии
 ----------
 
-* [bh-client](#bh-client)
-* [bh-client-module](#bh-client-module)
-* [bh-server](#bh-server)
-* [bh-server-include](#bh-server-include)
+* [bh-bundle](#bh-bundle)
+* [bh-server](#bh-commonjs)
 * [bemjson-to-html](#bemjson-to-html)
 * [bemjson-to-html-i18n](#bemjson-to-html-i18n)
 
 Для работы модуля требуется зависимость от пакета `enb` версии `0.12.0` или выше.
 
-### bh-client
+### bh-bundle
 
-Склеивает `bh`-файлы по deps'ам в виде `?.bh.client.js`. Предназначен для сборки клиентского BH-кода.
+Склеивает *bh*-файлы по deps'ам в виде `?.bh.js` бандла.
+
+Предназначен для сборки как клиентского, так и серверного BH-кода. Предполагается, что в *bh*-файлах не используется `require`.
+
+Поддерживает CommonJS и YModules. Если в исполняемой среде нет ни одной модульной системы, то модуль будет предоставлен в глобальную переменную `bh`.
 
 **Опции**
 
@@ -42,31 +44,10 @@ $ npm install --save-dev enb-bh
 **Пример**
 
 ```javascript
-nodeConfig.addTech(require('enb-bh/techs/bh-client'));
+nodeConfig.addTech(require('enb-bh/techs/bh-bundle'));
 ```
 
-### bh-client-module
-
-Склеивает `bh`-файлы по deps'ам в виде `?.bh.client.js`. Предназначен для сборки клиентского BH-кода. Использует модульную обертку.
-
-**Опции**
-
-* *String* **target** — Результирующий таргет. По умолчанию — `?.bh.client.js`.
-* *String* **filesTarget** — files-таргет, на основе которого получается список исходных файлов (его предоставляет технология `files`). По умолчанию — `?.files`.
-* *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — `['bh.js']`.
-* *Boolean* **sourcemap** — строить карты кода.
-* *String|Array* **mimic** — имена модулей для экспорта.
-* *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
-* *String* **jsAttrScheme** — Схема данных для параметров инициализации. По умолчанию — `json`. Форматы: `js` — Получаем `return { ... }`. `json` — JSON-формат. Получаем `{ ... }`.
-* *String|Boolean* **jsCls** — имя `i-bem` CSS-класса. По умолчанию - `i-bem`. Для того, чтобы класс не добавлялся, следует указать значение `false` или пустую строку.
-
-**Пример**
-
-```javascript
-nodeConfig.addTech(require('enb-bh/techs/bh-client-module'));
-```
-
-### bh-server
+### bh-commonjs
 
 Склеивает *bh*-файлы по deps'ам с помощью набора `require` в виде `?.bh.js`. Предназначен для сборки серверного BH-кода. После сборки требуется наличие всех файлов, подключённых с помощью набора `require`.
 
@@ -83,28 +64,7 @@ nodeConfig.addTech(require('enb-bh/techs/bh-client-module'));
 **Пример**
 
 ```javascript
-nodeConfig.addTech(require('enb-bh/techs/bh-server'));
-```
-
-### bh-server-include
-
-Склеивает `bh`-файлы по deps'ам в виде `?.bh.js`. Предназначен для сборки серверного BH-кода. Предполагается, что в `bh`-файлах не используется `require`.
-
-**Опции**
-
-* *String* **target** — Результирующий таргет. По умолчанию — `?.bh.js`.
-* *String* **filesTarget** — files-таргет, на основе которого получается список исходных файлов (его предоставляет технология `files`). По умолчанию — `?.files`.
-* *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — `['bh.js']`.
-* *Boolean* **sourcemap** — строить карты кода.
-* *String|Array* **mimic** — имена переменных для экспорта.
-* *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
-* *String* **jsAttrScheme** — Схема данных для параметров инициализации. По умолчанию — `json`. Форматы: `js` — Получаем `return { ... }`. `json` — JSON-формат. Получаем `{ ... }`.
-* *String|Boolean* **jsCls** — имя `i-bem` CSS-класса. По умолчанию - `i-bem`. Для того, чтобы класс не добавлялся, следует указать значение `false` или пустую строку.
-
-**Пример**
-
-```javascript
-nodeConfig.addTech(require('enb-bh/techs/bh-server-include'));
+nodeConfig.addTech(require('enb-bh/techs/bh-commonjs'));
 ```
 
 ### bemjson-to-html
