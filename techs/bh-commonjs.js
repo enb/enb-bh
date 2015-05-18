@@ -1,6 +1,6 @@
 /**
- * bh-server
- * =========
+ * bh-commonjs
+ * ===========
  *
  * Склеивает *bh*-файлы по deps'ам с помощью набора `require` в виде `?.bh.js`.
  * Предназначен для сборки серверного BH-кода. После сборки требуется наличия всех файлов,
@@ -25,14 +25,14 @@
  * **Пример**
  *
  * ```javascript
- * nodeConfig.addTech(require('enb-bh/techs/bh-server'));
+ * nodeConfig.addTech(require('enb-bh/techs/bh-commonjs'));
  * ```
  */
 
 var path = require('path');
 
 module.exports = require('enb/lib/build-flow').create()
-    .name('bh-server')
+    .name('bh-commonjs')
     .target('target', '?.bh.js')
     .defineOption('bhFile', '')
     .defineOption('mimic', [])
@@ -61,6 +61,7 @@ module.exports = require('enb/lib/build-flow').create()
             var relPath = node.relativePath(absPath);
 
             // Replace slashes with backslashes for windows paths for correct require work.
+            /* istanbul ignore if */
             if (relPath.indexOf('\\') !== -1) {
                 relPath = relPath.replace(/\\/g, '/');
             }

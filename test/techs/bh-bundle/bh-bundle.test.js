@@ -1,12 +1,12 @@
 var fs = require('fs'),
     mock = require('mock-fs'),
     TestNode = require('enb/lib/test/mocks/test-node'),
-    bhServerInclude = require('../../techs/bh-server-include'),
+    Tech = require('../../../techs/bh-bundle'),
     FileList = require('enb/lib/file-list'),
     bhCoreFilename = require.resolve('bh/lib/bh.js'),
-    writeFile = require('../lib/write-file');
+    writeFile = require('../../lib/write-file');
 
-describe('bh-server-include', function () {
+describe('bh-bundle', function () {
     var mockBhCore = [
         'function BH () {}',
         'BH.prototype.apply = function() { return "^_^"; };',
@@ -100,44 +100,6 @@ describe('bh-server-include', function () {
         });
     });
 
-    it('truly CommonJS', function () {
-        var templates = [
-                [
-                    'bh.match("block", function(ctx) {',
-                        'var url = require("url");',
-                        'ctx.content(url.resolve("http://example.com/", "/pathname"));',
-                    '});'].join('\n')
-            ],
-            bemjson = { block: 'block' },
-            html = '<div class="block">http://example.com/pathname</div>';
-
-        return assert(bemjson, html, templates);
-    });
-
-    describe('mimic', function () {
-        it('mimic to BEMHTML', function () {
-            var templates = [
-                'bh.match("block", function(ctx) {ctx.tag("a");});'
-            ],
-            bemjson = { block: 'block' },
-            html = '<a class="block"></a>',
-            options = { mimic: 'BEMHTML' };
-
-            return assert(bemjson, html, templates, options);
-        });
-
-        it('mimic as an array', function () {
-            var templates = [
-                'bh.match("block", function(ctx) {ctx.tag("a");});'
-            ],
-            bemjson = { block: 'block' },
-            html = '<a class="block"></a>',
-            options = { mimic: ['BH', 'BEMHTML'] };
-
-            return assert(bemjson, html, templates, options);
-        });
-    });
-
     describe('caches', function () {
         it('must use cached bhFile', function () {
             var scheme = {
@@ -168,9 +130,9 @@ describe('bh-server-include', function () {
             fileList.loadFromDirSync('blocks');
             bundle.provideTechData('?.files', fileList);
 
-            return bundle.runTech(bhServerInclude)
+            return bundle.runTech(Tech)
                 .then(function () {
-                    return bundle.runTechAndRequire(bhServerInclude, { bhFile: 'mock.bh.js' });
+                    return bundle.runTechAndRequire(Tech, { bhFile: 'mock.bh.js' });
                 })
                 .spread(function (bh) {
                     bh.apply({ block: 'block' }).must.be('<div class="block"></div>');
@@ -206,9 +168,9 @@ describe('bh-server-include', function () {
             fileList.loadFromDirSync('blocks');
             bundle.provideTechData('?.files', fileList);
 
-            return bundle.runTech(bhServerInclude)
+            return bundle.runTech(Tech)
                 .then(function () {
-                    return bundle.runTechAndRequire(bhServerInclude, { bhFile: 'mock.bh.js' });
+                    return bundle.runTechAndRequire(Tech, { bhFile: 'mock.bh.js' });
                 })
                 .spread(function (bh) {
                     bh.apply({ block: 'block' }).must.be('^_^');
@@ -233,7 +195,7 @@ describe('bh-server-include', function () {
             fileList.loadFromDirSync('blocks');
             bundle.provideTechData('?.files', fileList);
 
-            return bundle.runTech(bhServerInclude)
+            return bundle.runTech(Tech)
                 .then(function () {
                     return writeFile(
                         'blocks/block.bh.js',
@@ -245,7 +207,7 @@ describe('bh-server-include', function () {
                     fileList.loadFromDirSync('blocks');
                     bundle.provideTechData('?.files', fileList);
 
-                    return bundle.runTechAndRequire(bhServerInclude);
+                    return bundle.runTechAndRequire(Tech);
                 })
                 .spread(function (bh) {
                     bh.apply({ block: 'block' }).must.be('<b class="block"></b>');
@@ -272,7 +234,7 @@ describe('bh-server-include', function () {
         fileList.loadFromDirSync('blocks');
         bundle.provideTechData('?.files', fileList);
 
-        return bundle.runTechAndGetContent(bhServerInclude, options)
+        return bundle.runTechAndGetContent(Tech, options)
             .spread(function (bh) {
                 bh.toString().must.include('sourceMappingURL');
             });
@@ -308,7 +270,7 @@ function assert(bemjson, html, templates, options) {
     fileList.loadFromDirSync('blocks');
     bundle.provideTechData('?.files', fileList);
 
-    return bundle.runTechAndRequire(bhServerInclude, options)
+    return bundle.runTechAndRequire(Tech, options)
         .spread(function (bh) {
             bh.apply(bemjson).must.be(html);
 

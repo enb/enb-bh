@@ -1,18 +1,23 @@
 /**
- * bh-server-include
- * =================
+ * bh-bundle
+ * =========
  *
- * Склеивает *bh*-файлы по deps'ам в виде `?.bh.js`. Предназначен для сборки серверного BH-кода.
+ * Склеивает *bh*-файлы по deps'ам в виде `?.bh.js` бандла.
+ *
+ * Предназначен для сборки как клиентского, так и серверного BH-кода.
  * Предполагается, что в *bh*-файлах не используется `require`.
+ *
+ * Поддерживает CommonJS и YModules. Если в исполняемой среде нет ни одной модульной системы, то модуль будет
+ * предоставлен в глобальную переменную `bh`.
  *
  * **Опции**
  *
  * * *String* **target** — Результирующий таргет. По умолчанию — `?.bh.js`.
  * * *String* **filesTarget** — files-таргет, на основе которого получается список исходных файлов
  *   (его предоставляет технология `files`). По умолчанию — `?.files`.
- * * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — ['bh'].
+ * * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — ['bh.js'].
  * * *Boolean* **sourcemap** — строить карты кода.
- * * *String|Array* **mimic** — имена модулей для экспорта.
+ * * *String|Array* **mimic** — имена переменных/модулей для экспорта.
  * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
  * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `json`.
  * *                             Форматы:
@@ -25,19 +30,19 @@
  * **Пример**
  *
  * ```javascript
- * nodeConfig.addTech(require('enb-bh/techs/bh-server-include'));
+ * nodeConfig.addTech(require('enb-bh/techs/bh-bundle'));
  * ```
  */
-
 var vow = require('vow'),
     path = require('path'),
-    bhClientProcessor = require('../lib/bh-client-processor'),
-    readFile = require('../lib/util').readFile;
+    vfs = require('enb/lib/fs/async-fs'),
+    compile = require('../lib/compile');
 
 module.exports = require('enb/lib/build-flow').create()
-    .name('bh-server-include')
+    .name('bh-bundle')
     .target('target', '?.bh.js')
     .defineOption('bhFile', '')
+    .defineOption('dependencies', {})
     .defineOption('mimic', [])
     .defineOption('jsAttrName', 'data-bem')
     .defineOption('jsAttrScheme', 'json')
@@ -46,7 +51,6 @@ module.exports = require('enb/lib/build-flow').create()
     .useFileList(['bh.js'])
     .needRebuild(function (cache) {
         this._bhFile = this._bhFile ? path.join(this.node._root, this._bhFile) : require.resolve('bh/lib/bh.js');
-
         return cache.needRebuildFile('bh-file', this._bhFile);
     })
     .saveCache(function (cache) {
@@ -54,43 +58,40 @@ module.exports = require('enb/lib/build-flow').create()
     })
     .builder(function (bhFiles) {
         var node = this.node,
-            dependencies = {},
-            mimic = this._mimic,
-            jsAttrName = this._jsAttrName,
-            jsAttrScheme = this._jsAttrScheme,
-            jsCls = this._jsCls,
-            sourcemap = this._sourcemap,
-            targetPath = node.resolvePath(this._target);
+            opts = {
+                filename: node.resolvePath(this._target),
+                sourcemap: this._sourcemap,
+                jsAttrName: this._jsAttrName,
+                jsAttrScheme: this._jsAttrScheme,
+                jsCls: this._jsCls,
+                mimic: [].concat(this._mimic),
+                dependencies: this._dependencies
+            },
+            coreFilename = this._bhFile;
+
         return vow.all([
-            readFile(this._bhFile),
+            vfs.read(coreFilename, 'utf8')
+                .then(function (contents) {
+                    return {
+                        path: coreFilename,
+                        contents: contents
+                    };
+                }),
             vow.all(bhFiles.map(function (file) {
-                return readFile(file.fullname).then(function (data) {
-                    data.content = bhClientProcessor.process(data.content);
-                    data.relPath = node.relativePath(file.fullname);
-                    return data;
-                });
+                return vfs.read(file.fullname, 'utf8')
+                    .then(function (contents) {
+                        return {
+                            path: file.fullname,
+                            relPath: node.relativePath(file.fullname),
+                            // Adapts single BH file content to client-side
+                            contents: contents
+                                .replace(/module\.exports\s*=\s*function\s*\([^\)]*\)\s*\{/, '')
+                                .replace(/}\s*(?:;)?\s*$/, '')
+                        };
+                    });
             }))
         ]).spread(function (bhEngine, inputSources) {
-            var file = bhClientProcessor.build(
-                targetPath,
-                bhEngine,
-                inputSources,
-                dependencies,
-                jsAttrName,
-                jsAttrScheme,
-                jsCls,
-                sourcemap
-            );
-
-            file.writeLine('module.exports = bh;');
-
-            if (mimic) {
-                [].concat(mimic).forEach(function (name) {
-                    file.writeLine('bh[\'' + name + '\'] = bh;');
-                });
-            }
-
-            return file.render();
+            return compile(bhEngine, inputSources, opts);
         });
     })
     .createTech();
