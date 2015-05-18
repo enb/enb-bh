@@ -2,7 +2,7 @@
  * bemjson-to-html
  * =================
  *
- * Собирает *html*-файл с помощью *bemjson* и *bh*.
+ * Собирает *html*-файл с помощью *bemjson* и *BH*.
  *
  * **Опции**
  *
@@ -36,8 +36,8 @@ module.exports = require('enb/lib/build-flow').create()
                 dropRequireCache(require, bhFilename);
 
                 return asyncRequire(bhFilename)
-                    .then(function (bh) {
-                        return bh.apply(json);
+                    .then(function (BH) {
+                        return BH.apply(json);
                     });
         });
     })

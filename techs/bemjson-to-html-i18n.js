@@ -2,7 +2,7 @@
  * bemjson-to-html-i18n
  * ======================
  *
- * Собирает *html*-файл с помощью *bemjson*, *bh*, *lang.all* и *lang.{lang}*.
+ * Собирает *html*-файл с помощью *bemjson*, *BH*, *lang.all* и *lang.{lang}*.
  *
  * **Опции**
  *
@@ -61,11 +61,11 @@ module.exports = require('enb/lib/build-flow').create()
             requireOrEval(bemjsonFilename),
             vfs.read(allLangFilename),
             vfs.read(langFilename)
-        ]).spread(function (bh, bemjson, allLangSource, langSource) {
+        ]).spread(function (BH, bemjson, allLangSource, langSource) {
             vm.runInThisContext(allLangSource, allLangFilename);
             vm.runInThisContext(langSource, langFilename);
 
-            return bh.apply(bemjson);
+            return BH.apply(bemjson);
         });
     })
     .createTech();

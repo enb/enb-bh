@@ -1,6 +1,6 @@
 var mock = require('mock-fs'),
     TestNode = require('enb/lib/test/mocks/test-node'),
-    bemjsonToHtml = require('../../techs/bemjson-to-html'),
+    Tech = require('../../techs/bemjson-to-html'),
     writeFile = require('../lib/write-file');
 
 describe('bemjson-to-html', function () {
@@ -23,7 +23,7 @@ describe('bemjson-to-html', function () {
 
         bundle = new TestNode('bundle');
 
-        return bundle.runTechAndGetContent(bemjsonToHtml)
+        return bundle.runTechAndGetContent(Tech)
             .spread(function (html) {
                 html.toString().must.be('<html>^_^</html>');
             });
@@ -43,7 +43,7 @@ describe('bemjson-to-html', function () {
 
             bundle = new TestNode('bundle');
 
-            return bundle.runTech(bemjsonToHtml)
+            return bundle.runTech(Tech)
                 .spread(function () {
                     return writeFile(
                         'bundle/bundle.bemjson.js',
@@ -51,14 +51,14 @@ describe('bemjson-to-html', function () {
                     );
                 })
                 .then(function () {
-                    return bundle.runTechAndGetContent(bemjsonToHtml);
+                    return bundle.runTechAndGetContent(Tech);
                 })
                 .spread(function (html) {
                     html.toString().must.be('<html>anotherBlock</html>');
                 });
         });
 
-        it('must not use outdated bh-bundle file', function () {
+        it('must not use outdated BH bundle file', function () {
             var scheme = {
                 blocks: {},
                 bundle: {
@@ -71,7 +71,7 @@ describe('bemjson-to-html', function () {
 
             bundle = new TestNode('bundle');
 
-            return bundle.runTech(bemjsonToHtml)
+            return bundle.runTech(Tech)
                 .then(function () {
                     return writeFile(
                         'bundle/bundle.bh.js',
@@ -79,7 +79,7 @@ describe('bemjson-to-html', function () {
                     );
                 })
                 .then(function () {
-                    return bundle.runTechAndGetContent(bemjsonToHtml);
+                    return bundle.runTechAndGetContent(Tech);
                 })
                 .spread(function (html) {
                     html.toString().must.be('<html>o_o</html>');

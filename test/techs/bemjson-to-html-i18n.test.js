@@ -1,6 +1,6 @@
 var mock = require('mock-fs'),
     TestNode = require('enb/lib/test/mocks/test-node'),
-    bemjsonToHtmlI18N = require('../../techs/bemjson-to-html-i18n'),
+    Tech = require('../../techs/bemjson-to-html-i18n'),
     writeFile = require('../lib/write-file');
 
 describe('bemjson-to-html-i18n', function () {
@@ -36,7 +36,7 @@ describe('bemjson-to-html-i18n', function () {
         bundle = new TestNode('bundle');
 
         return bundle.runTechAndGetContent(
-            bemjsonToHtmlI18N, { lang: 'ru' }
+            Tech, { lang: 'ru' }
         ).spread(function (html) {
             html.toString().must.be('<html>i18n-key</html>');
         });
@@ -59,7 +59,7 @@ describe('bemjson-to-html-i18n', function () {
             bundle = new TestNode('bundle');
 
             return bundle.runTech(
-                    bemjsonToHtmlI18N, { lang: 'ru' }
+                    Tech, { lang: 'ru' }
                 ).then(function () {
                     return writeFile(
                         'bundle/bundle.bemjson.js',
@@ -67,14 +67,14 @@ describe('bemjson-to-html-i18n', function () {
                     );
                 })
                 .then(function () {
-                    return bundle.runTechAndGetContent(bemjsonToHtmlI18N, { lang: 'ru' });
+                    return bundle.runTechAndGetContent(Tech, { lang: 'ru' });
                 })
                 .spread(function (html) {
                     html.toString().must.be('<html>anotherBlock</html>');
                 });
         });
 
-        it('must not use outdated bh-bundle file', function () {
+        it('must not use outdated BH bundle file', function () {
             var scheme = {
                 blocks: {},
                 bundle: {
@@ -90,7 +90,7 @@ describe('bemjson-to-html-i18n', function () {
             bundle = new TestNode('bundle');
 
             return bundle.runTech(
-                    bemjsonToHtmlI18N, { lang: 'ru' }
+                    Tech, { lang: 'ru' }
                 ).then(function () {
                     return writeFile(
                         'bundle/bundle.bh.js',
@@ -98,7 +98,7 @@ describe('bemjson-to-html-i18n', function () {
                     );
                 })
                 .then(function () {
-                    return bundle.runTechAndGetContent(bemjsonToHtmlI18N, { lang: 'ru' });
+                    return bundle.runTechAndGetContent(Tech, { lang: 'ru' });
                 })
                 .spread(function (html) {
                     html.toString().must.be('<html>o_o</html>');

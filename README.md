@@ -49,7 +49,7 @@ nodeConfig.addTech(require('enb-bh/techs/bh-bundle'));
 
 ### bh-commonjs
 
-Склеивает *bh*-файлы по deps'ам с помощью набора `require` в виде `?.bh.js`. Предназначен для сборки серверного BH-кода. После сборки требуется наличие всех файлов, подключённых с помощью набора `require`.
+Склеивает *BH*-файлы по deps'ам с помощью набора `require` в виде `?.bh.js`. Предназначен для сборки серверного BH-кода. После сборки требуется наличие всех файлов, подключённых с помощью набора `require`.
 
 **Опции**
 
@@ -69,7 +69,7 @@ nodeConfig.addTech(require('enb-bh/techs/bh-commonjs'));
 
 ### bemjson-to-html
 
-Собирает *html*-файл с помощью *bemjson* и *bh*.
+Собирает *html*-файл с помощью *bemjson* и *BH*.
 
 **Опции**
 
@@ -85,7 +85,7 @@ nodeConfig.addTech(require('enb-bh/techs/bemjson-to-html'));
 
 ### bemjson-to-html-i18n
 
-Собирает *html*-файл с помощью *bemjson*, *bh*, *lang.all* и *lang.{lang}*.
+Собирает *html*-файл с помощью *bemjson*, *BH*, *lang.all* и *lang.{lang}*.
 
 **Опции**
 

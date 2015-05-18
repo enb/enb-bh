@@ -19,7 +19,7 @@ describe('bh-bundle', function () {
         mock.restore();
     });
 
-    it('must compile bh-file', function () {
+    it('must compile BH file', function () {
         var templates = [
                 'bh.match("block", function(ctx) {ctx.tag("a");});'
             ],
@@ -29,7 +29,7 @@ describe('bh-bundle', function () {
         return assert(bemjson, html, templates);
     });
 
-    it('must compile bh-file with custom core', function () {
+    it('must compile BH file with custom core', function () {
         var templates = [
                 'bh.match("block", function(ctx) { return "Not custom core!"; });'
             ],
@@ -209,8 +209,8 @@ describe('bh-bundle', function () {
 
                     return bundle.runTechAndRequire(Tech);
                 })
-                .spread(function (bh) {
-                    bh.apply({ block: 'block' }).must.be('<b class="block"></b>');
+                .spread(function (BH) {
+                    BH.apply({ block: 'block' }).must.be('<b class="block"></b>');
                 });
         });
     });
@@ -235,8 +235,8 @@ describe('bh-bundle', function () {
         bundle.provideTechData('?.files', fileList);
 
         return bundle.runTechAndGetContent(Tech, options)
-            .spread(function (bh) {
-                bh.toString().must.include('sourceMappingURL');
+            .spread(function (BH) {
+                BH.toString().must.include('sourceMappingURL');
             });
     });
 });
@@ -271,11 +271,11 @@ function assert(bemjson, html, templates, options) {
     bundle.provideTechData('?.files', fileList);
 
     return bundle.runTechAndRequire(Tech, options)
-        .spread(function (bh) {
-            bh.apply(bemjson).must.be(html);
+        .spread(function (BH) {
+            BH.apply(bemjson).must.be(html);
 
             options && options.mimic && [].concat(options.mimic).forEach(function (name) {
-                bh[name].apply(bemjson).must.be(html);
+                BH[name].apply(bemjson).must.be(html);
             });
         });
 }
