@@ -28,7 +28,7 @@ describe('bh-bundle --node', function () {
                 ],
                 bemjson = { block: 'block' },
                 html = '<a class="block"></a>',
-                options = { mimic: ['BH', 'BEMHTML'] };
+                options = { mimic: ['bh', 'BEMHTML'] };
 
             return assert(bemjson, html, templates, options);
         });
@@ -78,11 +78,11 @@ function assert(bemjson, html, templates, options) {
     bundle.provideTechData('?.files', fileList);
 
     return bundle.runTechAndRequire(Tech, options)
-        .spread(function (bh) {
-            bh.apply(bemjson).must.be(html);
+        .spread(function (BH) {
+            BH.apply(bemjson).must.be(html);
 
             options && options.mimic && [].concat(options.mimic).forEach(function (name) {
-                bh[name].apply(bemjson).must.be(html);
+                BH[name].apply(bemjson).must.be(html);
             });
         });
 }

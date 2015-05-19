@@ -1,7 +1,7 @@
 var fs = require('fs'),
     mock = require('mock-fs'),
     TestNode = require('enb/lib/test/mocks/test-node'),
-    bhServer = require('../../techs/bh-commonjs'),
+    Tech = require('../../techs/bh-commonjs'),
     FileList = require('enb/lib/file-list'),
     bhCoreFilename = require.resolve('bh/lib/bh.js'),
     writeFile = require('../lib/write-file');
@@ -19,7 +19,7 @@ describe('bh-commonjs', function () {
         mock.restore();
     });
 
-    it('must compile bh-file', function () {
+    it('must compile BH file', function () {
         var templates = [
                 'bh.match("block", function(ctx) {ctx.tag("a");});'
             ],
@@ -29,7 +29,7 @@ describe('bh-commonjs', function () {
         return assert(bemjson, html, templates);
     });
 
-    it('must compile bh-file with custom core', function () {
+    it('must compile BH file with custom core', function () {
         var templates = [
                 'bh.match("block", function(ctx) { return "Not custom core!"; });'
             ],
@@ -141,9 +141,9 @@ describe('bh-commonjs', function () {
             fileList.loadFromDirSync('blocks');
             bundle.provideTechData('?.files', fileList);
 
-            return bundle.runTechAndRequire(bhServer)
-                .spread(function (bh) {
-                    bh.apply({ block: 'block' }).must.be('<div class="block">^_^</div>');
+            return bundle.runTechAndRequire(Tech)
+                .spread(function (BH) {
+                    BH.apply({ block: 'block' }).must.be('<div class="block">^_^</div>');
                 });
         });
     });
@@ -202,12 +202,12 @@ describe('bh-commonjs', function () {
             fileList.loadFromDirSync('blocks');
             bundle.provideTechData('?.files', fileList);
 
-            return bundle.runTech(bhServer)
+            return bundle.runTech(Tech)
                 .then(function () {
-                    return bundle.runTechAndRequire(bhServer, { bhFile: 'mock.bh.js' });
+                    return bundle.runTechAndRequire(Tech, { bhFile: 'mock.bh.js' });
                 })
-                .spread(function (bh) {
-                    bh.apply({ block: 'block' }).must.be('<div class="block"></div>');
+                .spread(function (BH) {
+                    BH.apply({ block: 'block' }).must.be('<div class="block"></div>');
                 });
         });
 
@@ -240,12 +240,12 @@ describe('bh-commonjs', function () {
             fileList.loadFromDirSync('blocks');
             bundle.provideTechData('?.files', fileList);
 
-            return bundle.runTech(bhServer)
+            return bundle.runTech(Tech)
                 .then(function () {
-                    return bundle.runTechAndRequire(bhServer, { bhFile: 'mock.bh.js' });
+                    return bundle.runTechAndRequire(Tech, { bhFile: 'mock.bh.js' });
                 })
-                .spread(function (bh) {
-                    bh.apply({ block: 'block' }).must.be('^_^');
+                .spread(function (BH) {
+                    BH.apply({ block: 'block' }).must.be('^_^');
                 });
         });
 
@@ -267,7 +267,7 @@ describe('bh-commonjs', function () {
             fileList.loadFromDirSync('blocks');
             bundle.provideTechData('?.files', fileList);
 
-            return bundle.runTech(bhServer)
+            return bundle.runTech(Tech)
                 .then(function () {
                     return writeFile(
                         'blocks/block.bh.js',
@@ -279,10 +279,10 @@ describe('bh-commonjs', function () {
                     fileList.loadFromDirSync('blocks');
                     bundle.provideTechData('?.files', fileList);
 
-                    return bundle.runTechAndRequire(bhServer);
+                    return bundle.runTechAndRequire(Tech);
                 })
-                .spread(function (bh) {
-                    bh.apply({ block: 'block' }).must.be('<b class="block"></b>');
+                .spread(function (BH) {
+                    BH.apply({ block: 'block' }).must.be('<b class="block"></b>');
                 });
         });
     });
@@ -317,12 +317,12 @@ function assert(bemjson, html, templates, options) {
     fileList.loadFromDirSync('blocks');
     bundle.provideTechData('?.files', fileList);
 
-    return bundle.runTechAndRequire(bhServer, options)
-        .spread(function (bh) {
-            bh.apply(bemjson).must.be(html);
+    return bundle.runTechAndRequire(Tech, options)
+        .spread(function (BH) {
+            BH.apply(bemjson).must.be(html);
 
             options && options.mimic && [].concat(options.mimic).forEach(function (name) {
-                bh[name].apply(bemjson).must.be(html);
+                BH[name].apply(bemjson).must.be(html);
             });
         });
 }
