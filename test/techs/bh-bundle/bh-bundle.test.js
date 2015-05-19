@@ -100,6 +100,29 @@ describe('bh-bundle', function () {
         });
     });
 
+    describe('escapeContent', function () {
+        it('false by default', function () {
+            var templates = [
+                    'bh.match("block", function(ctx) {ctx.content("<script>");});'
+                ],
+                bemjson = { block: 'block' },
+                html = '<div class="block"><script></div>';
+
+            return assert(bemjson, html, templates);
+        });
+
+        it('use escaping when escapeContent param is true', function () {
+            var templates = [
+                    'bh.match("block", function(ctx) {ctx.content("<script>");});'
+                ],
+                bemjson = { block: 'block' },
+                html = '<div class="block">&lt;script&gt;</div>',
+                options = { escapeContent: true };
+
+            return assert(bemjson, html, templates, options);
+        });
+    });
+
     describe('caches', function () {
         it('must use cached bhFile', function () {
             var scheme = {

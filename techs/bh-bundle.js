@@ -27,6 +27,8 @@
  * * *String|Boolean* **jsCls** — имя `i-bem` CSS-класса. По умолчанию - `i-bem`. Для того, чтобы класс
  *    не добавлялся, следует указать значение `false` или пустую строку.
  *
+ * * *Boolean* **escapeContent** — экранирование содержимого. По умолчанию - `false`.
+ *
  * **Пример**
  *
  * ```javascript
@@ -47,6 +49,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('jsAttrName', 'data-bem')
     .defineOption('jsAttrScheme', 'json')
     .defineOption('jsCls', 'i-bem')
+    .defineOption('escapeContent', false)
     .defineOption('sourcemap', false)
     .useFileList(['bh.js'])
     .needRebuild(function (cache) {
@@ -64,6 +67,7 @@ module.exports = require('enb/lib/build-flow').create()
                 jsAttrName: this._jsAttrName,
                 jsAttrScheme: this._jsAttrScheme,
                 jsCls: this._jsCls,
+                escapeContent: this._escapeContent,
                 mimic: [].concat(this._mimic),
                 dependencies: this._dependencies
             },
