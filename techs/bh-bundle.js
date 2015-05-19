@@ -59,10 +59,68 @@ module.exports = require('enb/lib/build-flow').create()
     .saveCache(function (cache) {
         cache.cacheFileInfo('bh-file', this._bhFile);
     })
-    .builder(function (bhFiles) {
-        var node = this.node,
-            opts = {
-                filename: node.resolvePath(this._target),
+    .builder(function (files) {
+        return vow.all([
+                this._readCore(),
+                this._readTemplates(files)
+            ], this)
+            .spread(function (core, sources) {
+                return this._compile(core, sources);
+            }, this);
+    })
+    .methods({
+        /**
+         * Read file with BH core.
+         *
+         * @returns {{ path: String, contents: String }}
+         * @protected
+         */
+        _readCore: function () {
+            var filename = this._bhFile;
+
+            return vfs.read(filename, 'utf8')
+                .then(function (contents) {
+                    return {
+                        path: filename,
+                        contents: contents
+                    };
+                });
+        },
+        /**
+         * Read files with source templates.
+         *
+         * @param {FileList} files
+         * @returns {{ path: String, relPath: String, contents: String }[]}
+         * @protected
+         */
+        _readTemplates: function (files) {
+            var node = this.node,
+                process = this._processTemplate;
+
+            return vow.all(files.map(function (file) {
+                return vfs.read(file.fullname, 'utf8')
+                    .then(function (contents) {
+                        return {
+                            path: file.fullname,
+                            relPath: node.relativePath(file.fullname),
+                            contents: process(contents)
+                        };
+                    });
+            }));
+        },
+        /**
+         * Compile code of bh module with core and source templates.
+         *
+         * @param {Object}   core          File with bh core
+         * @param {String}   core.path     Path to file with BH core
+         * @param {String}   core.contents Contents of file with BH core
+         * @param {{path: String, contents: String}[]} sources Files with source templates
+         * @returns {String} compiled code of bh module
+         * @protected
+         */
+        _compile: function (core, sources) {
+            var opts = {
+                filename: this.node.resolvePath(this._target),
                 sourcemap: this._sourcemap,
                 jsAttrName: this._jsAttrName,
                 jsAttrScheme: this._jsAttrScheme,
@@ -70,32 +128,21 @@ module.exports = require('enb/lib/build-flow').create()
                 escapeContent: this._escapeContent,
                 mimic: [].concat(this._mimic),
                 dependencies: this._dependencies
-            },
-            coreFilename = this._bhFile;
+            };
 
-        return vow.all([
-            vfs.read(coreFilename, 'utf8')
-                .then(function (contents) {
-                    return {
-                        path: coreFilename,
-                        contents: contents
-                    };
-                }),
-            vow.all(bhFiles.map(function (file) {
-                return vfs.read(file.fullname, 'utf8')
-                    .then(function (contents) {
-                        return {
-                            path: file.fullname,
-                            relPath: node.relativePath(file.fullname),
-                            // Adapts single BH file content to client-side
-                            contents: contents
-                                .replace(/module\.exports\s*=\s*function\s*\([^\)]*\)\s*\{/, '')
-                                .replace(/}\s*(?:;)?\s*$/, '')
-                        };
-                    });
-            }))
-        ]).spread(function (bhEngine, inputSources) {
-            return compile(bhEngine, inputSources, opts);
-        });
+            return compile(core, sources, opts);
+        },
+        /**
+         * Adapts single BH file content to client-side.
+         *
+         * @param {String} contents
+         * @returns {String}
+         * @protected
+         */
+        _processTemplate: function (contents) {
+            return contents
+                .replace(/module\.exports\s*=\s*function\s*\([^\)]*\)\s*\{/, '')
+                .replace(/}\s*(?:;)?\s*$/, '');
+        }
     })
     .createTech();
