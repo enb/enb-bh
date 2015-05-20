@@ -31,28 +31,20 @@
  * ```
  */
 
-var path = require('path');
+var coreFilename = require.resolve('bh/lib/bh.js');
 
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-commonjs')
     .target('target', '?.bh.js')
-    .defineOption('bhFile', '')
     .defineOption('mimic', [])
     .defineOption('jsAttrName', 'data-bem')
     .defineOption('jsAttrScheme', 'json')
     .defineOption('jsCls', 'i-bem')
     .defineOption('escapeContent', false)
     .useFileList(['bh.js'])
-    .needRebuild(function (cache) {
-        this._bhFile = this._bhFile ? path.join(this.node._root, this._bhFile) : require.resolve('bh/lib/bh.js');
-
-        return cache.needRebuildFile('bh-file', this._bhFile);
-    })
-    .saveCache(function (cache) {
-        cache.cacheFileInfo('bh-file', this._bhFile);
-    })
     .builder(function (bhFiles) {
         var node = this.node;
+
         /**
          * Генерирует `require`-строку для подключения исходных bh-файлов.
          *
@@ -96,7 +88,7 @@ module.exports = require('enb/lib/build-flow').create()
 
         return [
             dropRequireCacheFunc,
-            buildRequire(this._bhFile, 'var BH = '),
+            buildRequire(coreFilename, 'var BH = '),
             'var bh = new BH();',
             'bh.setOptions({',
             '   jsAttrName: \'' + this._jsAttrName + '\',',

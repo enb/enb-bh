@@ -29,19 +29,6 @@ describe('bh-commonjs', function () {
         return assert(bemjson, html, templates);
     });
 
-    it('must compile BH file with custom core', function () {
-        var templates = [
-                'bh.match("block", function(ctx) { return "Not custom core!"; });'
-            ],
-            bemjson = { block: 'block' },
-            html = '^_^',
-            options = {
-                bhFile: mockBhCore
-            };
-
-        return assert(bemjson, html, templates, options);
-    });
-
     describe('jsAttr params', function () {
         it('must apply default jsAttrName and jsAttrScheme params', function () {
             var bemjson = { block: 'block', js: true },
@@ -234,44 +221,6 @@ describe('bh-commonjs', function () {
                 });
         });
 
-        it('must rewrite cached bhFile if the new bhFile exist', function () {
-            var scheme = {
-                    blocks: {},
-                    bundle: {}
-                },
-                bundle, fileList;
-
-            scheme[bhCoreFilename] = mock.file({
-                content: fs.readFileSync(bhCoreFilename, 'utf-8'),
-                mtime: new Date(1)
-            });
-
-            /*
-             * Добавляем кастомное ядро с mtime для проверки кэша.
-             * Если mtime разные, то должно использоваться кастомное ядро
-             * (кэш должен перезаписаться)
-             */
-            scheme['mock.bh.js'] = mock.file({
-                content: mockBhCore,
-                mtime: new Date(2)
-            });
-
-            mock(scheme);
-
-            bundle = new TestNode('bundle');
-            fileList = new FileList();
-            fileList.loadFromDirSync('blocks');
-            bundle.provideTechData('?.files', fileList);
-
-            return bundle.runTech(Tech)
-                .then(function () {
-                    return bundle.runTechAndRequire(Tech, { bhFile: 'mock.bh.js' });
-                })
-                .spread(function (BH) {
-                    BH.apply({ block: 'block' }).must.be('^_^');
-                });
-        });
-
         it('must ignore outdated cache of the templates', function () {
             var scheme = {
                     blocks: {
@@ -321,11 +270,6 @@ function assert(bemjson, html, templates, options) {
             bundle: {}
         },
         bundle, fileList;
-
-    if (options && options.bhFile) {
-        scheme['bh.js'] = options.bhFile;
-        options.bhFile = 'bh.js';
-    }
 
     templates && templates.forEach(function (item, i) {
         scheme.blocks['block-' + i + '.bh.js'] = bhWrap(item);

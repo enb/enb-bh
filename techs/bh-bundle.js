@@ -36,14 +36,12 @@
  * ```
  */
 var vow = require('vow'),
-    path = require('path'),
     vfs = require('enb/lib/fs/async-fs'),
     compile = require('../lib/compile');
 
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-bundle')
     .target('target', '?.bh.js')
-    .defineOption('bhFile', '')
     .defineOption('dependencies', {})
     .defineOption('mimic', [])
     .defineOption('jsAttrName', 'data-bem')
@@ -52,39 +50,33 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('escapeContent', false)
     .defineOption('sourcemap', false)
     .useFileList(['bh.js'])
-    .needRebuild(function (cache) {
-        this._bhFile = this._bhFile ? path.join(this.node._root, this._bhFile) : require.resolve('bh/lib/bh.js');
-        return cache.needRebuildFile('bh-file', this._bhFile);
-    })
-    .saveCache(function (cache) {
-        cache.cacheFileInfo('bh-file', this._bhFile);
-    })
     .builder(function (files) {
-        return vow.all([
-                this._readCore(),
-                this._readTemplates(files)
-            ], this)
-            .spread(function (core, sources) {
-                return this._compile(core, sources);
+        return this._readTemplates(files)
+            .then(function (sources) {
+                return this._compile(sources);
             }, this);
     })
     .methods({
         /**
-         * Read file with BH core.
+         * Compile code of bh module with core and source templates.
          *
-         * @returns {{ path: String, contents: String }}
+         * @param {{path: String, contents: String}[]} sources Files with source templates
+         * @returns {String} compiled code of bh module
          * @protected
          */
-        _readCore: function () {
-            var filename = this._bhFile;
+        _compile: function (sources) {
+            var opts = {
+                filename: this.node.resolvePath(this._target),
+                sourcemap: this._sourcemap,
+                jsAttrName: this._jsAttrName,
+                jsAttrScheme: this._jsAttrScheme,
+                jsCls: this._jsCls,
+                escapeContent: this._escapeContent,
+                mimic: [].concat(this._mimic),
+                dependencies: this._dependencies
+            };
 
-            return vfs.read(filename, 'utf8')
-                .then(function (contents) {
-                    return {
-                        path: filename,
-                        contents: contents
-                    };
-                });
+            return compile(sources, opts);
         },
         /**
          * Read files with source templates.
@@ -107,30 +99,6 @@ module.exports = require('enb/lib/build-flow').create()
                         };
                     });
             }));
-        },
-        /**
-         * Compile code of bh module with core and source templates.
-         *
-         * @param {Object}   core          File with bh core
-         * @param {String}   core.path     Path to file with BH core
-         * @param {String}   core.contents Contents of file with BH core
-         * @param {{path: String, contents: String}[]} sources Files with source templates
-         * @returns {String} compiled code of bh module
-         * @protected
-         */
-        _compile: function (core, sources) {
-            var opts = {
-                filename: this.node.resolvePath(this._target),
-                sourcemap: this._sourcemap,
-                jsAttrName: this._jsAttrName,
-                jsAttrScheme: this._jsAttrScheme,
-                jsCls: this._jsCls,
-                escapeContent: this._escapeContent,
-                mimic: [].concat(this._mimic),
-                dependencies: this._dependencies
-            };
-
-            return compile(core, sources, opts);
         },
         /**
          * Adapts single BH file content to client-side.
