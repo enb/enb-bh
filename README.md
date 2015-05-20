@@ -16,7 +16,7 @@ $ npm install --save-dev enb-bh
 ----------
 
 * [bh-bundle](#bh-bundle)
-* [bh-server](#bh-commonjs)
+* [bh-commonjs](#bh-commonjs)
 * [bemjson-to-html](#bemjson-to-html)
 * [bemjson-to-html-i18n](#bemjson-to-html-i18n)
 
