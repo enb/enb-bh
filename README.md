@@ -85,24 +85,6 @@ nodeConfig.addTech(require('enb-bh/techs/bh-commonjs'));
 nodeConfig.addTech(require('enb-bh/techs/bemjson-to-html'));
 ```
 
-### bemjson-to-html-i18n
-
-Собирает *html*-файл с помощью *bemjson*, *BH*, *lang.all* и *lang.{lang}*.
-
-**Опции**
-
-* *String* **bhFile** — Исходный BH-файл. По умолчанию — `?.bh.js`.
-* *String* **bemjsonFile** — Исходный BEMJSON-файл. По умолчанию — `?.bemjson.js`.
-* *String* **langAllFile** — Исходный langAll-файл. По умолчанию — `?.lang.all.js`.
-* *String* **langFile** — Исходный lang-файл. По умолчанию — `?.lang.{lang}.js`. Если параметр lang не указан, берется первый из объявленных в проекте языков
-* *String* **target** — Результирующий HTML-файл. По умолчанию — `?.{lang}.html`.
-
-**Пример**
-
-```javascript
-nodeConfig.addTech(require('enb-bh/techs/bemjson-to-html-i18n'));
-```
-
 Лицензия
 --------
 
