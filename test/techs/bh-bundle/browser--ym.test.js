@@ -9,7 +9,8 @@ var fs = require('fs'),
     mochaFilename = require.resolve('mocha/mocha.js'),
     chaiFilename = require.resolve('chai/chai.js'),
     ymFilename = require.resolve('ym/modules.js'),
-    runServer = require('../../lib/run-server');
+    runServer = require('../../lib/run-server'),
+    EOL = require('os').EOL;
 
 describe('bh-bundle --browser --ym', function () {
     afterEach(function () {
@@ -32,7 +33,7 @@ describe('bh-bundle --browser --ym', function () {
                             'done();',
                         '});',
                     '});'
-                ].join('\n'),
+                ].join(EOL),
                 options = {
                     mimic: 'BEMHTML'
                 };
@@ -50,7 +51,7 @@ describe('bh-bundle --browser --ym', function () {
                             'done();',
                         '});',
                     '});'
-                ].join('\n'),
+                ].join(EOL),
                 options = {
                     mimic: ['BEMHTML', 'render']
                 };
@@ -128,5 +129,5 @@ function generateTest(json, expected) {
                     'done();',
                 '});',
             '});'
-    ].join('\n');
+    ].join(EOL);
 }

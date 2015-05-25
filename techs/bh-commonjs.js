@@ -31,7 +31,8 @@
  * ```
  */
 
-var coreFilename = require.resolve('bh/lib/bh.js');
+var coreFilename = require.resolve('bh/lib/bh.js'),
+    EOL = require('os').EOL;
 
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-commonjs')
@@ -64,7 +65,7 @@ module.exports = require('enb/lib/build-flow').create()
             return [
                 'dropRequireCache(require, require.resolve("' + relPath + '"));',
                 (pre || '') + 'require("' + relPath + '")' + (post || '') + ';'
-            ].join('\n');
+            ].join(EOL);
         }
 
         var dropRequireCacheFunc = [
@@ -84,7 +85,7 @@ module.exports = require('enb/lib/build-flow').create()
             '        delete requireFunc.cache[filename];',
             '    }',
             '};'
-        ].join('\n');
+        ].join(EOL);
 
         return [
             dropRequireCacheFunc,
@@ -99,12 +100,12 @@ module.exports = require('enb/lib/build-flow').create()
             '',
             bhFiles.map(function (file) {
                 return buildRequire(file.fullname, '', '(bh)');
-            }).join('\n'),
+            }).join(EOL),
             '',
             'module.exports = bh;',
             this._mimic ? [].concat(this._mimic).map(function (name) {
                 return 'bh[\'' + name + '\'] = bh;';
-            }).join('\n') : ''
-        ].join('\n');
+            }).join(EOL) : ''
+        ].join(EOL);
     })
     .createTech();
