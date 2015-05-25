@@ -4,7 +4,8 @@ var fs = require('fs'),
     Tech = require('../../../techs/bh-bundle'),
     FileList = require('enb/lib/file-list'),
     bhCoreFilename = require.resolve('bh/lib/bh.js'),
-    writeFile = require('../../lib/write-file');
+    writeFile = require('../../lib/write-file'),
+    EOL = require('os').EOL;
 
 describe('bh-bundle', function () {
     var mockBhCore = [
@@ -13,7 +14,7 @@ describe('bh-bundle', function () {
         'BH.prototype.match = function() {};',
         'BH.prototype.setOptions = function() {};',
         'module.exports = BH;'
-    ].join('\n');
+    ].join(EOL);
 
     afterEach(function () {
         mock.restore();

@@ -4,7 +4,8 @@ var fs = require('fs'),
     Tech = require('../../techs/bh-commonjs'),
     FileList = require('enb/lib/file-list'),
     bhCoreFilename = require.resolve('bh/lib/bh.js'),
-    writeFile = require('../lib/write-file');
+    writeFile = require('../lib/write-file'),
+    EOL = require('os').EOL;
 
 describe('bh-commonjs', function () {
     var mockBhCore = [
@@ -13,7 +14,7 @@ describe('bh-commonjs', function () {
         'BH.prototype.match = function() {};',
         'BH.prototype.setOptions = function() {};',
         'module.exports = BH;'
-    ].join('\n');
+    ].join(EOL);
 
     afterEach(function () {
         mock.restore();
@@ -118,7 +119,7 @@ describe('bh-commonjs', function () {
                             'var url = require("url");',
                             'ctx.content(url.resolve("http://example.com/", "/pathname"));',
                         '});'
-                    ].join('\n')
+                    ].join(EOL)
                 ],
                 bemjson = { block: 'block' },
                 html = '<div class="block">http://example.com/pathname</div>';
@@ -132,7 +133,7 @@ describe('bh-commonjs', function () {
                             'var someModule = require("./someModule");',
                             'ctx.content(someModule());',
                         '});'
-                    ].join('\n'),
+                    ].join(EOL),
                 scheme = {
                     blocks: {
                         'block.bh.js': bhWrap(template),
