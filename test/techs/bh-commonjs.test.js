@@ -1,10 +1,12 @@
-var fs = require('fs'),
+var path = require('path'),
+    fs = require('fs'),
     mock = require('mock-fs'),
     TestNode = require('enb/lib/test/mocks/test-node'),
     Tech = require('../../techs/bh-commonjs'),
     FileList = require('enb/lib/file-list'),
     bhCoreFilename = require.resolve('bh/lib/bh.js'),
     writeFile = require('../lib/write-file'),
+    dropRequireCache = require('enb/lib/fs/drop-require-cache'),
     EOL = require('os').EOL;
 
 describe('bh-commonjs', function () {
@@ -28,6 +30,42 @@ describe('bh-commonjs', function () {
             html = '<a class="block"></a>';
 
         return assert(bemjson, html, templates);
+    });
+
+    describe('mode', function () {
+        it('must drop require cache in dev mode', function () {
+            var opts = {
+                    devMode: true
+                },
+                bemjson = { block: 'block' },
+                html = '<a class="block"></a>';
+
+            return build([], opts)
+                .then(function () {
+                    return build(['bh.match("block", function(ctx) {ctx.tag("a");});'], opts);
+                })
+                .then(function (BH) {
+                    BH.apply(bemjson).must.equal(html);
+                });
+        });
+
+        it('must not drop require cache in prod mode', function () {
+            var opts = {
+                    devMode: false
+                },
+                bemjson = { block: 'block' },
+                html = '<div class="block"></div>';
+
+            dropRequireCache(require, path.resolve('blocks', 'block-0.bh.js'));
+
+            return build(['bh.match("block", function() {});'], opts)
+                .then(function () {
+                    return build(['bh.match("block", function(ctx) {ctx.tag("a");});'], opts);
+                })
+                .then(function (BH) {
+                    BH.apply(bemjson).must.equal(html);
+                });
+        });
     });
 
     describe('jsAttr params', function () {
@@ -283,7 +321,7 @@ function bhWrap(str) {
     return 'module.exports = function(bh) {' + str + '};';
 }
 
-function assert(bemjson, html, templates, options) {
+function build(templates, options) {
     var scheme = {
             blocks: {},
             bundle: {}
@@ -305,6 +343,13 @@ function assert(bemjson, html, templates, options) {
 
     return bundle.runTechAndRequire(Tech, options)
         .spread(function (BH) {
+            return BH;
+        });
+}
+
+function assert(bemjson, html, templates, options) {
+    return build(templates, options)
+        .then(function (BH) {
             BH.apply(bemjson).must.be(html);
 
             options && options.mimic && [].concat(options.mimic).forEach(function (name) {
