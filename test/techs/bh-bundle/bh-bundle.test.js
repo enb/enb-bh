@@ -55,6 +55,18 @@ describe('bh-bundle', function () {
 
             return assert(bemjson, html, templates);
         });
+
+        it('must perform each template in common scope if `scope: global`', function () {
+            var templates = [
+                    'var text = "Hello world!";',
+                    'bh.match("block", function(ctx) {ctx.content(typeof text === "undefined" ? "Hi!" : text);});'
+                ],
+                bemjson = { block: 'block' },
+                html = '<div class="block">Hello world!</div>',
+                opts = { scope: 'global' };
+
+            return assert(bemjson, html, templates, opts);
+        });
     });
 
     describe('jsAttr params', function () {

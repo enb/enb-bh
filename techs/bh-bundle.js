@@ -17,6 +17,9 @@
  *   (его предоставляет технология `files`). По умолчанию — `?.files`.
  * * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — ['bh.js'].
  * * *Boolean* **sourcemap** — строить карты кода.
+ * * *String* **scope** — скоуп выполнения кода шаблонов. По умолчанию — `template`. Если значение равно `template`,
+ *    то каждый шаблон будет выполнен в своём отдельном скоупе. Если значение равно `global`,
+ *    то все шаблоны будут выполнены в общем скоупе.
  * * *String|Array* **mimic** — имена переменных/модулей для экспорта.
  * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
  * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `json`.
@@ -49,6 +52,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('jsCls', 'i-bem')
     .defineOption('escapeContent', false)
     .defineOption('sourcemap', false)
+    .defineOption('scope', 'template')
     .useFileList(['bh.js'])
     .builder(function (files) {
         return this._readTemplates(files)
@@ -72,6 +76,7 @@ module.exports = require('enb/lib/build-flow').create()
                 jsAttrScheme: this._jsAttrScheme,
                 jsCls: this._jsCls,
                 escapeContent: this._escapeContent,
+                scope: this._scope,
                 mimic: [].concat(this._mimic),
                 dependencies: this._dependencies
             };
