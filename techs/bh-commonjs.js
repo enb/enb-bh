@@ -13,6 +13,7 @@
  *   (его предоставляет технология `files`). По умолчанию — `?.files`.
  * * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — ['bh.js'].
  * * *String|Array* **mimic** — имена модулей для экспорта.
+ * * *Boolean* **devMode** — режим сборки. По умолчанию — `true`.
  * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
  * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `json`.
  * *                             Форматы:
@@ -40,6 +41,7 @@ module.exports = require('enb/lib/build-flow').create()
     .name('bh-commonjs')
     .target('target', '?.bh.js')
     .defineOption('mimic', [])
+    .defineOption('devMode', true)
     .defineOption('jsAttrName', 'data-bem')
     .defineOption('jsAttrScheme', 'json')
     .defineOption('jsCls', 'i-bem')
@@ -47,7 +49,8 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('escapeContent', false)
     .useFileList(['bh.js'])
     .builder(function (bhFiles) {
-        var node = this.node;
+        var node = this.node,
+            devMode = this._devMode;
 
         /**
          * Генерирует `require`-строку для подключения исходных bh-файлов.
@@ -66,7 +69,7 @@ module.exports = require('enb/lib/build-flow').create()
             }
 
             return [
-                'dropRequireCache(require, require.resolve("' + relPath + '"));',
+                devMode ? 'dropRequireCache(require, require.resolve("' + relPath + '"));' : '',
                 (pre || '') + 'require("' + relPath + '")' + (post || '') + ';'
             ].join(EOL);
         }
@@ -91,7 +94,7 @@ module.exports = require('enb/lib/build-flow').create()
         ].join(EOL);
 
         return [
-            dropRequireCacheFunc,
+            devMode ? dropRequireCacheFunc : '',
             buildRequire(coreFilename, 'var BH = '),
             'var bh = new BH();',
             'bh.setOptions({',
