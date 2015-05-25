@@ -127,6 +127,24 @@ describe('bh-bundle', function () {
         });
     });
 
+    describe('jsElem', function () {
+        it('must add `i-bem` to elem if jsElem enabled', function () {
+            var bemjson = { block: 'block', elem: 'elem', js: true },
+                html = '<div class="block__elem i-bem" data-bem=\'{"block__elem":{}}\'></div>',
+                options = { jsElem: true };
+
+            return assert(bemjson, html, null, options);
+        });
+
+        it('must not add `i-bem` to elem if jsElem disabled', function () {
+            var bemjson = { block: 'block', elem: 'elem', js: true },
+                html = '<div class="block__elem" data-bem=\'{"block__elem":{}}\'></div>',
+                options = { jsElem: false };
+
+            return assert(bemjson, html, null, options);
+        });
+    });
+
     describe('escapeContent', function () {
         it('false by default', function () {
             var templates = [

@@ -21,6 +21,8 @@
  *
  * * *String|Boolean* **jsCls** — имя `i-bem` CSS-класса. По умолчанию - `i-bem`. Для того, чтобы класс
  *    не добавлялся, следует указать значение `false` или пустую строку.
+ * * *Boolean* **jsElem** — следует ли добавлять `i-bem` класс для элементов. По умолчанию - `true`.
+ *    Для того, чтобы класс не добавлялся, следует указать значение `false`.
  *
  * * *Boolean* **escapeContent** — экранирование содержимого. По умолчанию - `false`.
  *
@@ -41,6 +43,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('jsAttrName', 'data-bem')
     .defineOption('jsAttrScheme', 'json')
     .defineOption('jsCls', 'i-bem')
+    .defineOption('jsElem', true)
     .defineOption('escapeContent', false)
     .useFileList(['bh.js'])
     .builder(function (bhFiles) {
@@ -95,6 +98,7 @@ module.exports = require('enb/lib/build-flow').create()
             '   jsAttrName: \'' + this._jsAttrName + '\',',
             '   jsAttrScheme: \'' + this._jsAttrScheme + '\',',
             '   jsCls: ' + (this._jsCls ? ('\'' + this._jsCls + '\'') : false) + ',',
+            '   jsElem: ' + this._jsElem + ',',
             '   escapeContent: ' + this._escapeContent,
             '});',
             '',
