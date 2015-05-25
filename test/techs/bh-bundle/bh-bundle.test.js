@@ -30,6 +30,33 @@ describe('bh-bundle', function () {
         return assert(bemjson, html, templates);
     });
 
+    describe('scope', function () {
+        it('must perform each template in its scope', function () {
+            var templates = [
+                    'var text = "Hello world!";',
+                    'bh.match("block", function(ctx) {ctx.content(typeof text === "undefined" ? "Hi!" : text);});'
+                ],
+                bemjson = { block: 'block' },
+                html = '<div class="block">Hi!</div>';
+
+            return assert(bemjson, html, templates);
+        });
+
+        it('must ignore utility variables', function () {
+            var templates = [
+                    'bh.match("global", function(ctx) {ctx.content(global);});',
+                    'bh.match("BH", function(ctx) {ctx.content(BH);});'
+                ],
+                bemjson = [
+                    { block: 'global' },
+                    { block: 'BH' }
+                ],
+                html = '<div class="global"></div><div class="BH"></div>';
+
+            return assert(bemjson, html, templates);
+        });
+    });
+
     describe('jsAttr params', function () {
         it('must apply default jsAttrName and jsAttrScheme params', function () {
             var bemjson = { block: 'block', js: true },
