@@ -60,15 +60,36 @@ describe('bh-bundle --browser --ym', function () {
         });
     });
 
-    it('dependencies', function () {
-        var test = generateTest({ block: 'block' }, '<div class="block">^_^</div>'),
-            options = {
-                dependencies: { A: 'A' }
-            },
-            template = 'bh.match("block", function(ctx) { ctx.content(bh.lib.A); });',
-            lib = 'modules.define("A", function (provide) { provide("^_^"); });';
+    describe('requires', function () {
+        it('must get dependency from global scope', function () {
+            var test = generateTest({ block: 'block' }, '<div class="block">^_^</div>'),
+                options = {
+                    requires: {
+                        depend: {
+                            globals: 'depend'
+                        }
+                    }
+                },
+                template = 'bh.match("block", function(ctx) { ctx.content(bh.lib.depend); });',
+                lib = 'var depend = "^_^";';
 
-       return runTest(test, options, template, lib);
+            return runTest(test, options, template, lib);
+        });
+
+        it('must require depend from ym', function () {
+            var test = generateTest({ block: 'block' }, '<div class="block">^_^</div>'),
+                options = {
+                    requires: {
+                        depend: {
+                            ym: 'depend'
+                        }
+                    }
+                },
+                template = 'bh.match("block", function(ctx) { ctx.content(bh.lib.depend); });',
+                lib = 'modules.define("depend", function (provide) { provide("^_^"); });';
+
+            return runTest(test, options, template, lib);
+        });
     });
 });
 

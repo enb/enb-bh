@@ -53,14 +53,19 @@ describe('bh-bundle --browser --global-scope', function () {
         });
     });
 
-    it('dependencies', function () {
+    it('must get dependency from global scope', function () {
         var test = generateTest({ block: 'block' }, '<div class="block">^_^</div>'),
             options = {
-                dependencies: { test: '"^_^"' }
+                requires: {
+                    depend: {
+                        globals: 'depend'
+                    }
+                }
             },
-            template = 'bh.match("block", function(ctx) { ctx.content(bh.lib.test); });';
+            template = 'bh.match("block", function(ctx) { ctx.content(bh.lib.depend); });',
+            lib = 'var depend = "^_^";';
 
-       return runTest(test, options, template);
+       return runTest(test, options, template, lib);
     });
 });
 
@@ -68,7 +73,7 @@ function bhWrap(str) {
     return 'module.exports = function(bh) {' + str + '};';
 }
 
-function runTest(testContent, options, template) {
+function runTest(testContent, options, template, lib) {
     var bhTemplate = bhWrap(template || 'bh.match("block", function(ctx) { ctx.tag("a"); });'),
         bundle,
         fileList,
@@ -90,6 +95,7 @@ function runTest(testContent, options, template) {
     }
 
     scheme[bhCoreFilename] = fs.readFileSync(bhCoreFilename, 'utf-8');
+    scheme['some-lib.js'] = lib || '';
 
     mock(scheme);
 
