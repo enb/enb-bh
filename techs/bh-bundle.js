@@ -47,7 +47,7 @@ var vow = require('vow'),
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-bundle')
     .target('target', '?.bh.js')
-    .defineOption('dependencies', {})
+    .defineOption('requires', {})
     .defineOption('mimic', [])
     .defineOption('jsAttrName', 'data-bem')
     .defineOption('jsAttrScheme', 'json')
@@ -82,7 +82,7 @@ module.exports = require('enb/lib/build-flow').create()
                 escapeContent: this._escapeContent,
                 scope: this._scope,
                 mimic: [].concat(this._mimic),
-                dependencies: this._dependencies
+                requires: this._requires
             };
 
             return compile(sources, opts);
