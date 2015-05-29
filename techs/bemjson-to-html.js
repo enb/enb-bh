@@ -25,9 +25,6 @@ module.exports = require('enb/lib/build-flow').create()
     .target('target', '?.html')
     .useSourceFilename('bhFile', '?.bh.js')
     .useSourceFilename('bemjsonFile', '?.bemjson.js')
-    .optionAlias('bhFile', 'bhTarget')
-    .optionAlias('bemjsonFile', 'bemjsonTarget')
-    .optionAlias('target', 'destTarget')
     .builder(function (bhFilename, bemjsonFilename) {
         dropRequireCache(require, bemjsonFilename);
 
