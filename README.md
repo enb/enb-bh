@@ -1,9 +1,13 @@
 enb-bh
 ======
 
-[![NPM version](https://img.shields.io/npm/v/enb-bh.svg?style=flat)](https://www.npmjs.org/package/enb-bh) [![Build Status](https://img.shields.io/travis/enb-bem/enb-bh/master.svg?style=flat&label=tests)](https://travis-ci.org/enb-bem/enb-bh) [![Build status](https://img.shields.io/appveyor/ci/blond/enb-bh.svg?style=flat&label=windows)](https://ci.appveyor.com/project/blond/enb-bh) [![Coverage Status](https://img.shields.io/coveralls/enb-bem/enb-bh.svg?style=flat)](https://coveralls.io/r/enb-bem/enb-bh?branch=master) [![Dependency Status](https://img.shields.io/david/enb-bem/enb-bh.svg?style=flat)](https://david-dm.org/enb-bem/enb-bh)
+[![NPM version](https://img.shields.io/npm/v/enb-bh.svg?style=flat)](https://www.npmjs.org/package/enb-bh)
+[![Build Status](https://img.shields.io/travis/enb-bem/enb-bh/master.svg?style=flat&label=tests)](https://travis-ci.org/enb-bem/enb-bh)
+[![Build status](https://img.shields.io/appveyor/ci/blond/enb-bh.svg?style=flat&label=windows)](https://ci.appveyor.com/project/blond/enb-bh)
+[![Coverage Status](https://img.shields.io/coveralls/enb-bem/enb-bh.svg?style=flat)](https://coveralls.io/r/enb-bem/enb-bh?branch=master)
+[![Dependency Status](https://img.shields.io/david/enb-bem/enb-bh.svg?style=flat)](https://david-dm.org/enb-bem/enb-bh)
 
-Поддержка [`bh`](https://github.com/enb-make/bh) для ENB.
+Поддержка [BH](https://github.com/enb-make/bh) для ENB.
 
 Установка:
 ----------
@@ -18,7 +22,6 @@ $ npm install --save-dev enb-bh
 * [bh-bundle](#bh-bundle)
 * [bh-commonjs](#bh-commonjs)
 * [bemjson-to-html](#bemjson-to-html)
-* [bemjson-to-html-i18n](#bemjson-to-html-i18n)
 
 Для работы модуля требуется зависимость от пакета `enb` версии `0.12.0` или выше.
 
@@ -28,11 +31,11 @@ $ npm install --save-dev enb-bh
 
 Предназначен для сборки как клиентского, так и серверного BH-кода. Предполагается, что в *bh*-файлах не используется `require`.
 
-Поддерживает CommonJS и YModules. Если в исполняемой среде нет ни одной модульной системы, то модуль будет предоставлен в глобальную переменную `bh`.
+Поддерживает CommonJS и YModules. Если в исполняемой среде нет ни одной модульной системы, то модуль будет предоставлен в глобальную переменную `BH`.
 
 **Опции**
 
-* *String* **target** — Результирующий таргет. По умолчанию — `?.bh.client.js`.
+* *String* **target** — Результирующий таргет. По умолчанию — `?.bh.js`.
 * *String* **filesTarget** — files-таргет, на основе которого получается список исходных файлов (его предоставляет технология `files`). По умолчанию — `?.files`.
 * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — `['bh.js']`.
 * *Boolean* **sourcemap** — строить карты кода.
