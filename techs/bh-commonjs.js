@@ -1,42 +1,50 @@
-/**
- * bh-commonjs
- * ===========
- *
- * Склеивает *BH*-файлы по deps'ам с помощью набора `require` в виде `?.bh.js`.
- * Предназначен для сборки серверного BH-кода. После сборки требуется наличия всех файлов,
- * подключённых с помощью набора `require`.
- *
- * **Опции**
- *
- * * *String* **target** — Результирующий таргет. По умолчанию — `?.bh.js`.
- * * *String* **filesTarget** — files-таргет, на основе которого получается список исходных файлов
- *   (его предоставляет технология `files`). По умолчанию — `?.files`.
- * * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — ['bh.js'].
- * * *String|Array* **mimic** — имена модулей для экспорта.
- * * *Boolean* **devMode** — режим сборки. По умолчанию — `true`.
- * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
- * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `json`.
- * *                             Форматы:
- * *                                `js` — значение по умолчанию. Получаем `return { ... }`.
- * *                                `json` — JSON-формат. Получаем `{ ... }`.
- *
- * * *String|Boolean* **jsCls** — имя `i-bem` CSS-класса. По умолчанию - `i-bem`. Для того, чтобы класс
- *    не добавлялся, следует указать значение `false` или пустую строку.
- * * *Boolean* **jsElem** — следует ли добавлять `i-bem` класс для элементов. По умолчанию - `true`.
- *    Для того, чтобы класс не добавлялся, следует указать значение `false`.
- *
- * * *Boolean* **escapeContent** — экранирование содержимого. По умолчанию - `false`.
- *
- * **Пример**
- *
- * ```javascript
- * nodeConfig.addTech(require('enb-bh/techs/bh-commonjs'));
- * ```
- */
-
 var coreFilename = require.resolve('bh/lib/bh.js'),
     EOL = require('os').EOL;
 
+/**
+ * @class BHCommonJSTech
+ * @augments {BaseTech}
+ * @classdesc
+ *
+ * Compile CommonJS module of BH with requires of core and source templates (bh.js files).<br/><br/>
+ *
+ * Use to apply in server side only (Node.js). You can use `require` in templates.<br/><br/>
+ *
+ * Important: for correct apply the source files and files are specified in `requires` should be in file system.
+ *
+ * @param {Object}      [options]                           Options
+ * @param {String}      [options.target='?.bh.js']          Path to target with compiled file.
+ * @param {String}      [options.filesTarget='?.files']     Path to target with FileList.
+ * @param {String[]}    [options.sourceSuffixes='bh.js']    Files with specified suffixes involved in the assembly.
+ * @param {String[]}    [options.mimic]                     Names to export.
+ * @param {Boolean}     [options.devMode=true]              Drop cache for `require` of source templates.
+ * @param {String}      [options.jsAttrName='data-bem']     Set `jsAttrName` option for BH core.
+ * @param {String}      [options.jsAttrScheme='json']       Set `jsAttrScheme` option for BH core.
+ * @param {String}      [options.jsCls='i-bem']             Set `jsCls` option for BH core.
+ * @param {Boolean}     [options.jsElem=true]               Set `jsElem` option for BH core.
+ * @param {Boolean}     [options.escapeContent=false]       Set `escapeContent` option for BH core.
+ *
+ * @example
+ * var BHCommonJSTech = require('enb-bh/techs/bh-commonjs'),
+ *     FileProvideTech = require('enb/techs/file-provider'),
+ *     bem = require('enb-bem-techs');
+ *
+ * module.exports = function(config) {
+ *     config.node('bundle', function(node) {
+ *         // get FileList
+ *         node.addTechs([
+ *             [FileProvideTech, { target: '?.bemdecl.js' }],
+ *             [bem.levels, levels: ['blocks']],
+ *             bem.deps,
+ *             bem.files
+ *         ]);
+ *
+ *         // build BH file
+ *         node.addTech(BHCommonJSTech);
+ *         node.addTarget('?.bh.js');
+ *     });
+ * };
+ */
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-commonjs')
     .target('target', '?.bh.js')
@@ -50,17 +58,24 @@ module.exports = require('enb/lib/build-flow').create()
     .useFileList(['bh.js'])
     .builder(function (bhFiles) {
         var node = this.node,
-            devMode = this._devMode;
+            devMode = this._devMode,
+            mimic = [].concat(this._mimic);
 
         /**
-         * Генерирует `require`-строку для подключения исходных bh-файлов.
+         * Compile code for `require` module.
          *
-         * @param {String} absPath
-         * @param {String} pre
-         * @param {String} post
+         * In dev mode will be added code for drop cache of require.
+         *
+         * @param {String} filename - absolute path to module
+         * @param {String} varname - variable name to get module
          */
-        function buildRequire(absPath, pre, post) {
-            var relPath = node.relativePath(absPath);
+        function compileRequire(varname, filename) {
+            if (arguments.length === 1) {
+                filename = varname;
+                varname = undefined;
+            }
+
+            var relPath = node.relativePath(filename);
 
             // Replace slashes with backslashes for windows paths for correct require work.
             /* istanbul ignore if */
@@ -70,7 +85,7 @@ module.exports = require('enb/lib/build-flow').create()
 
             return [
                 devMode ? 'dropRequireCache(require, require.resolve("' + relPath + '"));' : '',
-                (pre || '') + 'require("' + relPath + '")' + (post || '') + ';'
+                (varname ? 'var ' + varname + '= ' : '') + 'require("' + relPath + '")' + (varname ? '' : '(bh)') + ';'
             ].join(EOL);
         }
 
@@ -95,7 +110,7 @@ module.exports = require('enb/lib/build-flow').create()
 
         return [
             devMode ? dropRequireCacheFunc : '',
-            buildRequire(coreFilename, 'var BH = '),
+            compileRequire('BH', coreFilename),
             'var bh = new BH();',
             'bh.setOptions({',
             '   jsAttrName: \'' + this._jsAttrName + '\',',
@@ -106,11 +121,11 @@ module.exports = require('enb/lib/build-flow').create()
             '});',
             '',
             bhFiles.map(function (file) {
-                return buildRequire(file.fullname, '', '(bh)');
+                return compileRequire(file.fullname);
             }).join(EOL),
             '',
             'module.exports = bh;',
-            this._mimic ? [].concat(this._mimic).map(function (name) {
+            mimic.length ? mimic.map(function (name) {
                 return 'bh[\'' + name + '\'] = bh;';
             }).join(EOL) : ''
         ].join(EOL);

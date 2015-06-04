@@ -1,49 +1,56 @@
-/**
- * bh-bundle
- * =========
- *
- * Склеивает *BH*-файлы по deps'ам в виде `?.bh.js` бандла.
- *
- * Предназначен для сборки как клиентского, так и серверного BH-кода.
- * Предполагается, что в *BH*-файлах не используется `require`.
- *
- * Поддерживает CommonJS и YModules. Если в исполняемой среде нет ни одной модульной системы, то модуль будет
- * предоставлен в глобальную переменную `bh`.
- *
- * **Опции**
- *
- * * *String* **target** — Результирующий таргет. По умолчанию — `?.bh.js`.
- * * *String* **filesTarget** — files-таргет, на основе которого получается список исходных файлов
- *   (его предоставляет технология `files`). По умолчанию — `?.files`.
- * * *String* **sourceSuffixes** — суффиксы файлов, по которым строится `files`-таргет. По умолчанию — ['bh.js'].
- * * *Boolean* **sourcemap** — строить карты кода.
- * * *String* **scope** — скоуп выполнения кода шаблонов. По умолчанию — `template`. Если значение равно `template`,
- *    то каждый шаблон будет выполнен в своём отдельном скоупе. Если значение равно `global`,
- *    то все шаблоны будут выполнены в общем скоупе.
- * * *String|Array* **mimic** — имена переменных/модулей для экспорта.
- * * *String* **jsAttrName** — атрибут блока с параметрами инициализации. По умолчанию — `data-bem`.
- * * *String* **jsAttrScheme** — Cхема данных для параметров инициализации. По умолчанию — `json`.
- * *                             Форматы:
- * *                                `js` — Получаем `return { ... }`.
- * *                                `json` — JSON-формат. Получаем `{ ... }`.
- *
- * * *String|Boolean* **jsCls** — имя `i-bem` CSS-класса. По умолчанию - `i-bem`. Для того, чтобы класс
- *    не добавлялся, следует указать значение `false` или пустую строку.
- * * *Boolean* **jsElem** — следует ли добавлять `i-bem` класс для элементов. По умолчанию - `true`.
- *    Для того, чтобы класс не добавлялся, следует указать значение `false`.
- *
- * * *Boolean* **escapeContent** — экранирование содержимого. По умолчанию - `false`.
- *
- * **Пример**
- *
- * ```javascript
- * nodeConfig.addTech(require('enb-bh/techs/bh-bundle'));
- * ```
- */
 var vow = require('vow'),
     vfs = require('enb/lib/fs/async-fs'),
-    compile = require('../lib/compile');
+    compile = require('../lib/compiler').compile;
 
+/**
+ * @class BHBundleTech
+ * @augments {BaseTech}
+ * @classdesc
+ *
+ * Build file with commonJS requires for core and each bh template (bh.js files).<br/><br/>
+ *
+ * Use to apply in browsers and on server side (Node.js).<br/><br/>
+ *
+ * The compiled BH module supports CommonJS and YModules. If there is no any modular system in the runtime,
+ * the module will be provided as global variable `BH`.<br/><br/>
+ *
+ * Important: do not use `require` in templates.
+ *
+ * @param {Object}      [options]                           Options
+ * @param {String}      [options.target='?.bh.js']          Path to target with compiled file.
+ * @param {String}      [options.filesTarget='?.files']     Path to target with FileList.
+ * @param {String[]}    [options.sourceSuffixes='bh.js']    Files with specified suffixes involved in the assembly.
+ * @param {Object}      [options.requires]                  Names for dependencies to `BH.lib.name`.
+ * @param {String[]}    [options.mimic]                     Names to export.
+ * @param {String}      [options.scope='template']          Scope to execute templates in.
+ * @param {Boolean}     [options.sourcemap=false]           Include inline source maps.
+ * @param {String}      [options.jsAttrName='data-bem']     Set `jsAttrName` option for BH core.
+ * @param {String}      [options.jsAttrScheme='json']       Set `jsAttrScheme` option for BH core.
+ * @param {String}      [options.jsCls='i-bem']             Set `jsCls` option for BH core.
+ * @param {Boolean}     [options.jsElem=true]               Set `jsElem` option for BH core.
+ * @param {Boolean}     [options.escapeContent=false]       Set `escapeContent` option for BH core.
+ *
+ * @example
+ * var BHBundleTech = require('enb-bh/techs/bh-bundle'),
+ *     FileProvideTech = require('enb/techs/file-provider'),
+ *     bem = require('enb-bem-techs');
+ *
+ * module.exports = function(config) {
+ *     config.node('bundle', function(node) {
+ *         // get FileList
+ *         node.addTechs([
+ *             [FileProvideTech, { target: '?.bemdecl.js' }],
+ *             [bem.levels, levels: ['blocks']],
+ *             bem.deps,
+ *             bem.files
+ *         ]);
+ *
+ *         // build BH file
+ *         node.addTech(BHBundleTech);
+ *         node.addTarget('?.bh.js');
+ *     });
+ * };
+ */
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-bundle')
     .target('target', '?.bh.js')
@@ -63,13 +70,14 @@ module.exports = require('enb/lib/build-flow').create()
                 return this._compile(sources);
             }, this);
     })
-    .methods({
+    .methods(/** @lends BHBundleTech.prototype */{
         /**
          * Compile code of bh module with core and source templates.
          *
-         * @param {{path: String, contents: String}[]} sources Files with source templates
-         * @returns {String} compiled code of bh module
+         * @see BHCompiler.compile
          * @protected
+         * @param {Array.<{path: String, contents: String}>} sources - Files with source templates.
+         * @returns {String} compiled code of bh module
          */
         _compile: function (sources) {
             var opts = {
@@ -90,9 +98,9 @@ module.exports = require('enb/lib/build-flow').create()
         /**
          * Read files with source templates.
          *
-         * @param {FileList} files
-         * @returns {{ path: String, relPath: String, contents: String }[]}
          * @protected
+         * @param {FileList} files
+         * @returns {Array.<{path: String, relPath: String, contents: String}>}
          */
         _readTemplates: function (files) {
             var node = this.node,
@@ -112,9 +120,9 @@ module.exports = require('enb/lib/build-flow').create()
         /**
          * Adapts single BH file content to client-side.
          *
-         * @param {String} contents
-         * @returns {String}
          * @protected
+         * @param {String} contents - Contents of source file.
+         * @returns {String}
          */
         _processTemplate: function (contents) {
             return contents
