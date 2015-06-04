@@ -1,7 +1,7 @@
 var path = require('path'),
     fs = require('fs'),
     mock = require('mock-fs'),
-    TestNode = require('enb/lib/test/mocks/test-node'),
+    TestNode = require('mock-enb/lib/mock-node'),
     Tech = require('../../techs/bh-commonjs'),
     FileList = require('enb/lib/file-list'),
     bhCoreFilename = require.resolve('bh/lib/bh.js'),

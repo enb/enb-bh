@@ -1,5 +1,5 @@
 var mock = require('mock-fs'),
-    TestNode = require('enb/lib/test/mocks/test-node'),
+    TestNode = require('mock-enb/lib/mock-node'),
     Tech = require('../../techs/bemjson-to-html'),
     writeFile = require('../lib/write-file');
 
