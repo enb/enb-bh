@@ -130,11 +130,8 @@ function runTest(testContent, options, template, lib) {
     fileList.loadFromDirSync('blocks');
     bundle.provideTechData('?.files', fileList);
 
-    return bundle.runTechAndGetContent(Tech, options)
-        .spread(function (bh) {
-            // TODO: удалить, когда пофиксится https://github.com/enb-make/enb/issues/224
-            fs.writeFileSync('bundle/bundle.bh.js', bh);
-
+    return bundle.runTech(Tech, options)
+        .then(function () {
             return runServer(3000);
         });
 }
