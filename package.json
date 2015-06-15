@@ -35,19 +35,19 @@
   "dependencies": {
     "bh": "^4.1.0",
     "enb-source-map": "1.5.0",
-    "vow": "0.4.9"
+    "vow": "0.4.10"
   },
   "devDependencies": {
-    "chai": "2.3.0",
+    "chai": "3.0.0",
     "enb": ">= 0.12.0 < 1.0.0",
     "mock-enb": "0.0.1",
-    "finalhandler": "0.3.6",
-    "istanbul": "0.3.14",
+    "finalhandler": "0.4.0",
+    "istanbul": "0.3.15",
     "jscs": "1.13.1",
-    "jshint": "2.7.0",
+    "jshint": "2.8.0",
     "mocha": "2.2.5",
     "mocha-phantomjs": "3.5.3",
-    "mock-fs": "2.7.0",
+    "mock-fs": "2.7.1",
     "must": "0.12.0",
     "phantomjs": "1.9.17",
     "serve-static": "1.9.3",
