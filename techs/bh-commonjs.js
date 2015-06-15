@@ -57,25 +57,47 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('escapeContent', false)
     .useFileList(['bh.js'])
     .builder(function (bhFiles) {
-        var node = this.node,
-            devMode = this._devMode,
-            mimic = [].concat(this._mimic);
+        return this._compile(bhFiles);
+    })
+    .methods(/** @lends BHBundleTech.prototype */{
+
+        /**
+         * Creates code of dropRequireCache function.
+         *
+         * @protected
+         * @returns {String} generated code of dropRequireCache function
+         */
+        _generateDropRequireCacheFunc: function () {
+            return [
+                'function dropRequireCache(requireFunc, filename) {',
+                '    var module = requireFunc.cache[filename];',
+                '    if (module) {',
+                '        if (module.parent) {',
+                '            if (module.parent.children) {',
+                '                var moduleIndex = module.parent.children.indexOf(module);',
+                '                if (moduleIndex !== -1) {',
+                '                    module.parent.children.splice(moduleIndex, 1);',
+                '                }',
+                '            }',
+                '            delete module.parent;',
+                '        }',
+                '        delete module.children;',
+                '        delete requireFunc.cache[filename];',
+                '    }',
+                '};'
+            ].join(EOL);
+        },
 
         /**
          * Compile code for `require` module.
-         *
          * In dev mode will be added code for drop cache of require.
          *
-         * @param {String} filename - absolute path to module
          * @param {String} varname - variable name to get module
+         * @param {String} filename - absolute path to module
+         * @param {Boolean} devMode - development mode flag
          */
-        function compileRequire(varname, filename) {
-            if (arguments.length === 1) {
-                filename = varname;
-                varname = undefined;
-            }
-
-            var relPath = node.relativePath(filename);
+        _compileRequire: function (varname, filename, devMode) {
+            var relPath = this.node.relativePath(filename);
 
             // Replace slashes with backslashes for windows paths for correct require work.
             /* istanbul ignore if */
@@ -87,47 +109,40 @@ module.exports = require('enb/lib/build-flow').create()
                 devMode ? 'dropRequireCache(require, require.resolve("' + relPath + '"));' : '',
                 (varname ? 'var ' + varname + '= ' : '') + 'require("' + relPath + '")' + (varname ? '' : '(bh)') + ';'
             ].join(EOL);
+        },
+
+        /**
+         * Compile code of bh module with core and source templates.
+         *
+         * @protected
+         * @param {Array.<{path: String, contents: String}>} sources - Files with source templates.
+         * @returns {String} compiled code of bh module
+         */
+        _compile: function (bhFiles) {
+            var devMode = this._devMode,
+                mimic = [].concat(this._mimic);
+
+            return [
+                devMode ? this._generateDropRequireCacheFunc() : '',
+                this._compileRequire('BH', coreFilename, devMode),
+                'var bh = new BH();',
+                'bh.setOptions({',
+                '   jsAttrName: \'' + this._jsAttrName + '\',',
+                '   jsAttrScheme: \'' + this._jsAttrScheme + '\',',
+                '   jsCls: ' + (this._jsCls ? ('\'' + this._jsCls + '\'') : false) + ',',
+                '   jsElem: ' + this._jsElem + ',',
+                '   escapeContent: ' + this._escapeContent,
+                '});',
+                '',
+                bhFiles.map(function (file) {
+                    return this._compileRequire(null, file.fullname, devMode);
+                }, this).join(EOL),
+                '',
+                'module.exports = bh;',
+                mimic.length ? mimic.map(function (name) {
+                    return 'bh[\'' + name + '\'] = bh;';
+                }).join(EOL) : ''
+            ].join(EOL);
         }
-
-        var dropRequireCacheFunc = [
-            'function dropRequireCache(requireFunc, filename) {',
-            '    var module = requireFunc.cache[filename];',
-            '    if (module) {',
-            '        if (module.parent) {',
-            '            if (module.parent.children) {',
-            '                var moduleIndex = module.parent.children.indexOf(module);',
-            '                if (moduleIndex !== -1) {',
-            '                    module.parent.children.splice(moduleIndex, 1);',
-            '                }',
-            '            }',
-            '            delete module.parent;',
-            '        }',
-            '        delete module.children;',
-            '        delete requireFunc.cache[filename];',
-            '    }',
-            '};'
-        ].join(EOL);
-
-        return [
-            devMode ? dropRequireCacheFunc : '',
-            compileRequire('BH', coreFilename),
-            'var bh = new BH();',
-            'bh.setOptions({',
-            '   jsAttrName: \'' + this._jsAttrName + '\',',
-            '   jsAttrScheme: \'' + this._jsAttrScheme + '\',',
-            '   jsCls: ' + (this._jsCls ? ('\'' + this._jsCls + '\'') : false) + ',',
-            '   jsElem: ' + this._jsElem + ',',
-            '   escapeContent: ' + this._escapeContent,
-            '});',
-            '',
-            bhFiles.map(function (file) {
-                return compileRequire(file.fullname);
-            }).join(EOL),
-            '',
-            'module.exports = bh;',
-            mimic.length ? mimic.map(function (name) {
-                return 'bh[\'' + name + '\'] = bh;';
-            }).join(EOL) : ''
-        ].join(EOL);
     })
     .createTech();
