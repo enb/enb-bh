@@ -23,6 +23,7 @@ var coreFilename = require.resolve('bh/lib/bh.js'),
  * @param {String}      [options.jsCls='i-bem']             Set `jsCls` option for BH core.
  * @param {Boolean}     [options.jsElem=true]               Set `jsElem` option for BH core.
  * @param {Boolean}     [options.escapeContent=false]       Set `escapeContent` option for BH core.
+ * @param {Boolean}     [options.clsNobaseMods=false]       Set `clsNobaseMods` option for BH core.
  *
  * @example
  * var BHCommonJSTech = require('enb-bh/techs/bh-commonjs'),
@@ -55,6 +56,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('jsCls', 'i-bem')
     .defineOption('jsElem', true)
     .defineOption('escapeContent', false)
+    .defineOption('clsNobaseMods', false)
     .useFileList(['bh.js'])
     .builder(function (bhFiles) {
         return this._compile(bhFiles);
@@ -131,7 +133,8 @@ module.exports = require('enb/lib/build-flow').create()
                 '   jsAttrScheme: \'' + this._jsAttrScheme + '\',',
                 '   jsCls: ' + (this._jsCls ? ('\'' + this._jsCls + '\'') : false) + ',',
                 '   jsElem: ' + this._jsElem + ',',
-                '   escapeContent: ' + this._escapeContent,
+                '   escapeContent: ' + this._escapeContent + ',',
+                '   clsNobaseMods: ' + this._clsNobaseMods,
                 '});',
                 '',
                 bhFiles.map(function (file) {

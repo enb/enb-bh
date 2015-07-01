@@ -29,6 +29,7 @@ var vow = require('vow'),
  * @param {String}      [options.jsCls='i-bem']             Set `jsCls` option for BH core.
  * @param {Boolean}     [options.jsElem=true]               Set `jsElem` option for BH core.
  * @param {Boolean}     [options.escapeContent=false]       Set `escapeContent` option for BH core.
+ * @param {Boolean}     [options.clsNobaseMods=false]       Set `clsNobaseMods` option for BH core.
  *
  * @example
  * var BHBundleTech = require('enb-bh/techs/bh-bundle'),
@@ -61,6 +62,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('jsCls', 'i-bem')
     .defineOption('jsElem', true)
     .defineOption('escapeContent', false)
+    .defineOption('clsNobaseMods', false)
     .defineOption('sourcemap', false)
     .defineOption('scope', 'template')
     .useFileList(['bh.js'])
@@ -88,6 +90,7 @@ module.exports = require('enb/lib/build-flow').create()
                 jsCls: this._jsCls,
                 jsElem: this._jsElem,
                 escapeContent: this._escapeContent,
+                clsNobaseMods: this._clsNobaseMods,
                 scope: this._scope,
                 mimic: [].concat(this._mimic),
                 requires: this._requires
