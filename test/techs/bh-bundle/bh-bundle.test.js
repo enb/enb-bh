@@ -168,6 +168,23 @@ describe('bh-bundle', function () {
         });
     });
 
+    describe('clsNobaseMods', function () {
+        it('false by default', function () {
+            var bemjson = { block: 'block', mods: { disabled: true, type: 'submit' } },
+                html = '<div class="block block_disabled block_type_submit"></div>';
+
+            return assert(bemjson, html);
+        });
+
+        it('must not use block\'s name for CSS-classes when clsNobaseMods param is true', function () {
+            var bemjson = { block: 'block', mods: { disabled: true, type: 'submit' } },
+                html = '<div class="block _disabled _type_submit"></div>',
+                options = { clsNobaseMods: true };
+
+            return assert(bemjson, html, null, options);
+        });
+    });
+
     describe('caches', function () {
         it('must use cached bhFile', function () {
             var scheme = {
