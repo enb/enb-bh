@@ -1,5 +1,5 @@
 {
-  "author": "Andrew Abramov <andrewblond@yandex.com>",
+  "author": "Andrew Abramov <mail@blond.im>",
   "description": "BH support for ENB",
   "name": "enb-bh",
   "version": "1.0.0-beta2",
@@ -15,7 +15,7 @@
   "contributors": [
     {
       "name": "Andrew Abramov",
-      "email": "andrewblond@yandex.com"
+      "email": "mail@blond.im"
     },
     {
       "name": "Marat Dulin",
