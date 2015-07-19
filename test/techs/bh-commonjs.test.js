@@ -233,6 +233,16 @@ describe('bh-commonjs', function () {
     });
 
     describe('mimic', function () {
+        it('mimic to bh by default', function () {
+            var templates = [
+                'bh.match("block", function(ctx) {ctx.tag("a");});'
+            ],
+            bemjson = { block: 'block' },
+            html = '<a class="block"></a>';
+
+            return assert(bemjson, html, templates);
+        });
+
         it('mimic to BEMHTML', function () {
             var templates = [
                 'bh.match("block", function(ctx) {ctx.tag("a");});'
