@@ -49,7 +49,7 @@ var coreFilename = require.resolve('bh/lib/bh.js'),
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-commonjs')
     .target('target', '?.bh.js')
-    .defineOption('mimic', [])
+    .defineOption('mimic', ['bh'])
     .defineOption('devMode', true)
     .defineOption('jsAttrName', 'data-bem')
     .defineOption('jsAttrScheme', 'json')
