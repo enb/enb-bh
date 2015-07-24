@@ -15,7 +15,7 @@ enb-bh
 * [bh-commonjs](api.ru.md#bh-commonjs)
 * [bemjson-to-html](api.ru.md#bemjson-to-html)
 
-Принципы работы технологий и их API описаны в документе [Использование `enb-bh`](api.ru.md).
+Принципы работы технологий и их API описаны в документе «[API технологий](api.ru.md)».
 
 **Совместимость:** технологии пакета `enb-bh` поддерживает версию [шаблонизатора BH](https://ru.bem.info/technology/bh/) `4.1.0` и выше.
 
@@ -199,7 +199,7 @@ $ npm install --save-dev enb-bh
 
 Для сборки HTML используйте технологию [bemjson-to-html](api.ru.md#bemjson-to-html).
 
-Принципы работы технологий и их API описаны в документе [Использование технологий пакета `enb-bh`](api.ru.md).
+Принципы работы технологий и их API описаны в документе «[API технологий](api.ru.md)».
 
 Лицензия
 --------
