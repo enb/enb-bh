@@ -15,7 +15,7 @@ enb-bh
 * [bh-commonjs](api.ru.md#bh-commonjs)
 * [bemjson-to-html](api.ru.md#bemjson-to-html)
 
-Принципы работы технологий и их API описаны в документе «[API технологий](api.ru.md)».
+Принципы работы технологий и их API описаны в документе [API технологий](api.ru.md).
 
 **Совместимость:** технологии пакета `enb-bh` поддерживает версию [шаблонизатора BH](https://ru.bem.info/technology/bh/) `4.1.0` и выше.
 
@@ -176,14 +176,14 @@ bh.match('post__date', function (ctx) {
 В технологии `bh-commonjs` в шаблоне можно подключать библиотеки с помощью `require`:
 
 ```js
-var lib = require('path/to/module'); // Путь до библиотеки
+var lib = require('path/to/module');  // Путь до библиотеки
 ```
 
 ### Мимикрия под BEMHTML
 
 БЭМ-платформа поддерживает два шаблонизатора: [BH](https://ru.bem.info/technology/bh/current/about/) и [BEMHTML](https://ru.bem.info/technology/bemhtml/current/rationale/), которые решают одну и ту же задачу: преобразуют [BEMJSON](https://ru.bem.info/technology/bemjson/current/bemjson/) в HTML.
 
-Для возможности писать JavaScript-код, совместимый с обоими шаблонизаторами, используется опция [mimic](api.ru.md#opt-mimic). Она позволяет использовать имена переменных BEMHTML, но по факту выполнять шаблоны BH.
+Для возможности писать JavaScript-код, совместимый с обоими шаблонизаторами, используется опция [mimic](api.ru.md#mimic). Она позволяет использовать имена переменных BEMHTML, но по факту выполнять шаблоны BH.
 
 ## Как начать использовать?
 
