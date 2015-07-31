@@ -47,7 +47,7 @@ describe('bh-bundle --node', function () {
     });
 
     describe('requires', function () {
-        it('must get dependency from global scope', function () {
+        it('must get dependency from global scope using simple key', function () {
             var templates = [
                     'bh.match("block", function(ctx) { ctx.content(bh.lib.text); });'
                 ],
@@ -61,6 +61,27 @@ describe('bh-bundle --node', function () {
                     }
                 },
                 lib = 'this.text = "Hello world!";';
+
+            return build(templates, options, lib)
+                .then(function (BH) {
+                    BH.apply(bemjson).must.equal(html);
+                });
+        });
+
+        it('must get dependency from global scope using dot-delimited key', function () {
+            var templates = [
+                    'bh.match("block", function(ctx) { ctx.content(bh.lib.text); });'
+                ],
+                bemjson = { block: 'block' },
+                html = '<div class="block">Hello world!</div>',
+                options = {
+                    requires: {
+                        text: {
+                            globals: 'text.value'
+                        }
+                    }
+                },
+                lib = 'this.text = {value: "Hello world!"};';
 
             return build(templates, options, lib)
                 .then(function (BH) {

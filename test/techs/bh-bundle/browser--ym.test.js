@@ -61,7 +61,7 @@ describe('bh-bundle --browser --ym', function () {
     });
 
     describe('requires', function () {
-        it('must get dependency from global scope', function () {
+        it('must get dependency from global scope using simple key', function () {
             var test = generateTest({ block: 'block' }, '<div class="block">^_^</div>'),
                 options = {
                     requires: {
@@ -72,6 +72,21 @@ describe('bh-bundle --browser --ym', function () {
                 },
                 template = 'bh.match("block", function(ctx) { ctx.content(bh.lib.depend); });',
                 lib = 'var depend = "^_^";';
+
+            return runTest(test, options, template, lib);
+        });
+
+        it('must get dependency from global scope using dot-delimited key', function () {
+            var test = generateTest({ block: 'block' }, '<div class="block">^_^</div>'),
+                options = {
+                    requires: {
+                        depend: {
+                            globals: 'depend.key'
+                        }
+                    }
+                },
+                template = 'bh.match("block", function(ctx) { ctx.content(bh.lib.depend); });',
+                lib = 'var depend = {key: "^_^"};';
 
             return runTest(test, options, template, lib);
         });
