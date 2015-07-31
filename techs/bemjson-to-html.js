@@ -12,9 +12,9 @@ var requireOrEval = require('enb/lib/fs/require-or-eval'),
  * This tech uses `BH.apply(bemjson)` to build HTML.
  *
  * @param {Object}  [options]                            Options
- * @param {String}  [options.target='?.html']            Path to target with HTML file.
- * @param {String}  [options.bhFile='?.bh.js']           Path to file with compiled BH module.
- * @param {String}  [options.bemjsonFile='?.bemjson.js'] Path to file with BEMJSON file.
+ * @param {String}  [options.target='?.html']            Path to a target with HTML file.
+ * @param {String}  [options.bhFile='?.bh.js']           Path to a file with compiled BH module.
+ * @param {String}  [options.bemjsonFile='?.bemjson.js'] Path to a BEMJSON file.
  *
  * @example
  * var BemjsonToHtmlTech = require('enb-bh/techs/bemjson-to-html'),

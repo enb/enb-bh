@@ -7,9 +7,9 @@ var vow = require('vow'),
  * @augments {BaseTech}
  * @classdesc
  *
- * Build file with commonJS requires for core and each bh template (bh.js files).<br/><br/>
+ * Build file with CommonJS requires for core and each BH template (`bh.js` files).<br/><br/>
  *
- * Use to apply in browsers and on server side (Node.js).<br/><br/>
+ * Use in browsers and on server side (Node.js).<br/><br/>
  *
  * The compiled BH module supports CommonJS and YModules. If there is no any modular system in the runtime,
  * the module will be provided as global variable `BH`.<br/><br/>
@@ -17,19 +17,19 @@ var vow = require('vow'),
  * Important: do not use `require` in templates.
  *
  * @param {Object}      [options]                           Options
- * @param {String}      [options.target='?.bh.js']          Path to target with compiled file.
- * @param {String}      [options.filesTarget='?.files']     Path to target with FileList.
+ * @param {String}      [options.target='?.bh.js']          Path to a target with compiled file.
+ * @param {String}      [options.filesTarget='?.files']     Path to a target with FileList.
  * @param {String[]}    [options.sourceSuffixes='bh.js']    Files with specified suffixes involved in the assembly.
  * @param {Object}      [options.requires]                  Names for dependencies to `BH.lib.name`.
- * @param {String[]}    [options.mimic]                     Names to export.
- * @param {String}      [options.scope='template']          Scope to execute templates in.
- * @param {Boolean}     [options.sourcemap=false]           Include inline source maps.
- * @param {String}      [options.jsAttrName='data-bem']     Set `jsAttrName` option for BH core.
- * @param {String}      [options.jsAttrScheme='json']       Set `jsAttrScheme` option for BH core.
- * @param {String}      [options.jsCls='i-bem']             Set `jsCls` option for BH core.
- * @param {Boolean}     [options.jsElem=true]               Set `jsElem` option for BH core.
- * @param {Boolean}     [options.escapeContent=false]       Set `escapeContent` option for BH core.
- * @param {Boolean}     [options.clsNobaseMods=false]       Set `clsNobaseMods` option for BH core.
+ * @param {String[]}    [options.mimic]                     Names for export.
+ * @param {String}      [options.scope='template']          Scope of template execution.
+ * @param {Boolean}     [options.sourcemap=false]           Includes inline source maps.
+ * @param {String}      [options.jsAttrName='data-bem']     Sets `jsAttrName` option for BH core.
+ * @param {String}      [options.jsAttrScheme='json']       Sets `jsAttrScheme` option for BH core.
+ * @param {String}      [options.jsCls='i-bem']             Sets `jsCls` option for BH core.
+ * @param {Boolean}     [options.jsElem=true]               Sets `jsElem` option for BH core.
+ * @param {Boolean}     [options.escapeContent=false]       Sets `escapeContent` option for BH core.
+ * @param {Boolean}     [options.clsNobaseMods=false]       Sets `clsNobaseMods` option for BH core.
  *
  * @example
  * var BHBundleTech = require('enb-bh/techs/bh-bundle'),
@@ -74,11 +74,11 @@ module.exports = require('enb/lib/build-flow').create()
     })
     .methods(/** @lends BHBundleTech.prototype */{
         /**
-         * Compile code of bh module with core and source templates.
+         * Compiles code of BH module with core and source templates.
          *
          * @see BHCompiler.compile
          * @protected
-         * @param {Array.<{path: String, contents: String}>} sources - Files with source templates.
+         * @param {Array.<{path: String, contents: String}>} sources — Files with source templates.
          * @returns {String} compiled code of bh module
          */
         _compile: function (sources) {
@@ -99,7 +99,7 @@ module.exports = require('enb/lib/build-flow').create()
             return compile(sources, opts);
         },
         /**
-         * Read files with source templates.
+         * Reads files with source templates.
          *
          * @protected
          * @param {FileList} files
@@ -121,10 +121,10 @@ module.exports = require('enb/lib/build-flow').create()
             }));
         },
         /**
-         * Adapts single BH file content to client-side.
+         * Adapts single BH file content to client side.
          *
          * @protected
-         * @param {String} contents - Contents of source file.
+         * @param {String} contents — Contents of a source file.
          * @returns {String}
          */
         _processTemplate: function (contents) {
