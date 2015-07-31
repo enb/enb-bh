@@ -15,17 +15,31 @@
 
 ### Опции
 
-#### target
+* [target](#target)
+* [filesTarget](#filestarget)
+* [sourceSuffixes](#sourcesuffixes)
+* [sourcemap](#sourcemap)
+* [requires](#requires)
+* [mimic](#mimic)
+* [scope](#scope)
+* [jsAttrName](#jsattrname)
+* [jsAttrScheme](#jsattrscheme)
+* [jsCls](#jscls)
+* [jsElem](#jselem)
+* [escapeContent](#escapecontent)
+* [clsNobaseMods](#clsnobasemods)
+
+### tmrget
 
 Тип: `String`. По умолчанию: `?.bh.js`.
 
-Путь к таргету, куда будет записан результат сборки необходимых `bh.js`-файлов проекта — скомпилированный файл `?.bh.js`.
+Имя таргета, куда будет записан результат сборки необходимых `bh.js`-файлов проекта — скомпилированный файл `?.bh.js`.
 
 #### filesTarget
 
 Тип: `String`. По умолчанию: `?.files`.
 
-Путь к таргету, откуда будет доступен список исходных файлов для сборки. Список файлов предоставляет технология [files](https://ru.bem.info/tools/bem/enb-bem-techs/readme/#files) пакета [enb-bem-techs](https://ru.bem.info/tools/bem/enb-bem-techs/readme/).
+Имя таргета, откуда будет доступен список исходных файлов для сборки. Список файлов предоставляет технология [files](https://ru.bem.info/tools/bem/enb-bem-techs/readme/#files) пакета [enb-bem-techs](https://ru.bem.info/tools/bem/enb-bem-techs/readme/).
 
 #### sourceSuffixes
 
@@ -47,7 +61,6 @@
 
 >Принцип работы описан в разделе [Подключение сторонних библиотек](README.md#Особенности-работы-пакета).
 
-<a name="opt-mimic"></a>
 #### mimic
 
 Тип: `String | String[]`. По умолчанию — `[]`.
@@ -138,17 +151,29 @@ var BHBundleTech = require('enb-bh/techs/bh-bundle'),
 
 ### Опции
 
+* [target](#target-1)
+* [filesTarget](#filestarget-1)
+* [sourceSuffixes](#sourcesuffixes-1)
+* [devMode](#devmode)
+* [mimic](#mimic)
+* [jsAttrName](#jsattrname)
+* [jsAttrScheme](#jsattrscheme)
+* [jsCls](#jscls)
+* [jsElem](#jselem)
+* [escapeContent](#escapecontent)
+* [clsNobaseMods](#clsnobasemods)
+
 #### target
 
 Тип: `String`. По умолчанию: `?.bh.js`.
 
-Путь к таргету, куда будет записан результат сборки необходимых `bh.js`-файлов проекта — скомпилированный файл `?.bh.js`.
+Имя таргета, куда будет записан результат сборки необходимых `bh.js`-файлов проекта — скомпилированный файл `?.bh.js`.
 
 #### filesTarget
 
 Тип: `String`. По умолчанию: `?.files`.
 
-Путь к таргету, откуда будет доступен список исходных файлов для сборки. Список файлов предоставляет технология [files](https://ru.bem.info/tools/bem/enb-bem-techs/readme/#files) пакета [enb-bem-techs](https://ru.bem.info/tools/bem/enb-bem-techs/readme/).
+Имя таргета, откуда будет доступен список исходных файлов для сборки. Список файлов предоставляет технология [files](https://ru.bem.info/tools/bem/enb-bem-techs/readme/#files) пакета [enb-bem-techs](https://ru.bem.info/tools/bem/enb-bem-techs/readme/).
 
 #### sourceSuffixes
 
@@ -239,17 +264,21 @@ module.exports = function(config) {
 
 ### Опции
 
+* [bhFile](#bhfile)
+* [bemjsonFile](#bemjsonfile)
+* [target](#target-2)
+
 #### bhFile
 
 Тип: `String`. По умолчанию: `?.bh.js`.
 
-Путь до файла, в котором содержится шаблон, скомпилированный одной из технологий ([bh-bundle](#bh-bundle) или [bh-commonjs](#bh-commonjs)). Используется для преобразования BEMJSON в HTML.
+Имя файла, в котором содержится шаблон, скомпилированный одной из технологий ([bh-bundle](#bh-bundle) или [bh-commonjs](#bh-commonjs)). Используется для преобразования BEMJSON в HTML.
 
 #### bemjsonFile
 
 Тип: `String`. По умолчанию: `?.bemjson.js`.
 
-Путь до BEMJSON-файла, к которому применится скомпилированный шаблон `?.bh.js` (результат работы технологий [bh-bundle](#bh-bundle) или [bh-commonjs](#bh-commonjs)) для получения HTML.
+Имя BEMJSON-файла, к которому применится скомпилированный шаблон `?.bh.js` (результат работы технологий [bh-bundle](#bh-bundle) или [bh-commonjs](#bh-commonjs)) для получения HTML.
 
 #### target
 
@@ -289,9 +318,3 @@ module.exports = function(config) {
     });
 };
 ```
-
-
-Лицензия
---------
-
-© 2014 YANDEX LLC. Код лицензирован [Mozilla Public License 2.0](LICENSE.txt).
