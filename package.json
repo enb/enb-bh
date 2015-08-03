@@ -34,8 +34,10 @@
   },
   "dependencies": {
     "bh": "^4.1.0",
+    "browserify": "11.0.1",
     "enb-source-map": "1.5.0",
-    "vow": "0.4.10"
+    "vow": "0.4.10",
+    "vow-node": "0.3.0"
   },
   "devDependencies": {
     "chai": "3.0.0",
@@ -51,7 +53,6 @@
     "must": "0.12.0",
     "phantomjs": "1.9.17",
     "serve-static": "1.9.3",
-    "vow-node": "0.3.0",
     "ym": "0.1.1"
   },
   "scripts": {

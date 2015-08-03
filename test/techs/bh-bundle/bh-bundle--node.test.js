@@ -92,19 +92,19 @@ describe('bh-bundle --node', function () {
         it('must require module from CommonJS', function () {
             var templates = [
                     [
-                        'var url = bh.lib.url.resolve("http://example.com/", "/one");',
+                        'var fake = bh.lib.fake;',
                         'bh.match("block", function(ctx) { ',
-                        '    ctx.tag("a");',
-                        '    ctx.attr("href", url);',
+                        '    var text = fake.getText();',
+                        '    ctx.content(text);',
                         '});'
                     ].join(EOL)
                 ],
                 bemjson = { block: 'block' },
-                html = '<a class="block" href="http://example.com/one"></a>',
+                html = '<div class="block">^_^</div>',
                 options = {
                     requires: {
-                        url: {
-                            commonJS: 'url'
+                        fake: {
+                            commonJS: 'fake'
                         }
                     }
                 };
@@ -121,7 +121,14 @@ function bhWrap(str) {
 function build(templates, options, lib) {
     var scheme = {
             blocks: {},
-            bundle: {}
+            bundle: {},
+            // jscs:disable
+            node_modules: {
+                fake: {
+                    'index.js': 'module.exports = { getText: function () { return "^_^"; } };'
+                }
+            }
+            // jscs:enable
         },
         bundle, fileList;
 
