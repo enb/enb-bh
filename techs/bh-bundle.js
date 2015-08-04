@@ -84,6 +84,7 @@ module.exports = require('enb/lib/build-flow').create()
         _compile: function (sources) {
             var opts = {
                 filename: this.node.resolvePath(this._target),
+                dirname: this.node.getDir(),
                 sourcemap: this._sourcemap,
                 jsAttrName: this._jsAttrName,
                 jsAttrScheme: this._jsAttrScheme,
