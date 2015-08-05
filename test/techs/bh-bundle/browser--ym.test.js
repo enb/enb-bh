@@ -105,6 +105,42 @@ describe('bh-bundle --browser --ym', function () {
 
             return runTest(test, options, template, lib);
         });
+
+        it('must require depend from CommonJS', function () {
+            var test = generateTest({ block: 'block' }, '<div class="block">^_^</div>'),
+                options = {
+                    requires: {
+                        fake: {
+                            commonJS: 'fake'
+                        }
+                    }
+                },
+                template = [
+                    'var fake = bh.lib.fake;',
+                    'bh.match("block", function(ctx) {',
+                    '    var text = fake.getText();',
+                    '    ctx.content(text);',
+                    '});'
+                ].join(EOL);
+
+            return runTest(test, options, template);
+        });
+
+        it('must require depend from ym if it is still in CommonJS', function () {
+            var test = generateTest({ block: 'block' }, '<div class="block">YModules</div>'),
+                options = {
+                    requires: {
+                        depend: {
+                            ym: 'depend',
+                            commonJS: 'depend'
+                        }
+                    }
+                },
+                template = 'bh.match("block", function(ctx) { ctx.content(bh.lib.depend); });',
+                lib = 'modules.define("depend", function (provide) { provide("YModules"); });';
+
+            return runTest(test, options, template, lib);
+        });
     });
 });
 
@@ -122,6 +158,16 @@ function runTest(testContent, options, template, lib) {
                 'block.bh.js': bhTemplate
             },
             bundle: {},
+            // jscs:disable
+            node_modules: {
+                fake: {
+                    'index.js': 'module.exports = { getText: function () { return "^_^"; } };'
+                },
+                depend: {
+                    'index.js': 'module.exports = "CommonJS";'
+                }
+            },
+            // jscs:enable
             'index.html': fs.readFileSync(htmlFilename, 'utf-8'),
             'test.js': testContent,
             'mocha.js': fs.readFileSync(mochaFilename, 'utf-8'),
