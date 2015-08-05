@@ -93,7 +93,7 @@ describe('bh-bundle --node', function () {
             var templates = [
                     [
                         'var fake = bh.lib.fake;',
-                        'bh.match("block", function(ctx) { ',
+                        'bh.match("block", function(ctx) {',
                         '    var text = fake.getText();',
                         '    ctx.content(text);',
                         '});'
