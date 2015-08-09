@@ -14,6 +14,7 @@ BH 4.0
 * [Хранение JS-данных](#Атрибут-для-js-данных)
 * [Поддержка пустых атрибутов](#Пустые-атрибуты)
 * [Обход БЭМ-дерева](#Обход-бэм-дерева)
+* [Поддержка BEM.I18N](#bemi18n)
 
 ### i-bem
 
@@ -97,6 +98,33 @@ bh.match('button', function (ctx, json) {
     json.mods       // объект модификаторов блока
     json.elemMods   // объект модификаторов элемента
 });
+```
+
+### BEM.I18N
+
+Модуль `BEM.I18N` не доступен из `bh.lib.i18n` по умолчанию. Теперь его нужно подключать так же, как и любые другие [сторонние библиотеки](README.md#Подключение-сторонних-библиотек). Подробнее об этом читайте в разделе [Интернационализация](README.md#Интернационализация).
+
+При использовании технологии [bh-bundle](api.ru.md#bh-bundle) следует воспользоваться опцией [requires](api.ru.md#requires):
+
+```js
+var BHBundleTech = require('enb-bh/techs/bh-bundle');
+
+node.addTech([BHBundleTech, {
+    requires: {
+        i18n: { globals: 'BEM.I18N' }
+    }
+}]);
+```
+
+Для технологии [bh-commonjs](api.ru.md#bh-commonjs) следует оперировать CommonJS-модулями и предоставить `BEM.I18N` в пространство имен `bh.lib` самостоятельно:
+
+```js
+var BEM = { I18N: require('path/to/i18n-module') },
+    BH = require('bundle.bh.js');
+
+BH.lib.i18n = BEM.I18N;
+
+module.exports = BH;
 ```
 
 Технологии
