@@ -28,16 +28,16 @@ var coreFilename = require.resolve('bh/lib/bh.js'),
  * @example
  * var BHCommonJSTech = require('enb-bh/techs/bh-commonjs'),
  *     FileProvideTech = require('enb/techs/file-provider'),
- *     bem = require('enb-bem-techs');
+ *     bemTechs = require('enb-bem-techs');
  *
  * module.exports = function(config) {
  *     config.node('bundle', function(node) {
  *         // get FileList
  *         node.addTechs([
  *             [FileProvideTech, { target: '?.bemdecl.js' }],
- *             [bem.levels, levels: ['blocks']],
- *             bem.deps,
- *             bem.files
+ *             [bemTechs.levels, levels: ['blocks']],
+ *             bemTechs.deps,
+ *             bemTechs.files
  *         ]);
  *
  *         // build BH file

@@ -1,19 +1,23 @@
-# API технологий
+API технологий
+==============
 
 Пакет предоставляет следующие технологии:
 
 * для сборки BH-шаблонов: [bh-bundle](#bh-bundle) или [bh-commonjs](#bh-commonjs);
 * для генерации HTML: [bemjson-to-html](#bemjson-to-html).
 
-## bh-bundle
+bh-bundle
+---------
 
-Собирает `bh.js`-файлы блоков и ядро в один файл — `?.bh.js`-бандл, который используется для работы как на клиенте, так и на сервере. Не требует подключения исходных файлов шаблонов.
+Собирает `bh.js`-файлы блоков и ядро в один файл — `?.bh.js`-бандл, который используется для работы как в браузере, так и в Node.js. После сборки не требует подключения исходных файлов шаблонов.
 
-Поддерживает [YModules](https://ru.bem.info/tools/bem/modules/) и частично [CommonJS](http://www.commonjs.org/), так как в bh.js-файлах функция `require` не будет работать корректно.
+Поддерживает модульные системы [YModules](https://ru.bem.info/tools/bem/modules/) и частично [CommonJS](http://www.commonjs.org/), так как в `bh.js`-файлах функция `require` не будет работать корректно.
 
 Если в исполняемой среде нет ни одной модульной системы, то модуль будет предоставлен в глобальную переменную `BH`.
 
 ### Опции
+
+Опции указываются в конфигурационном файле (.enb/make.js).
 
 * [target](#target)
 * [filesTarget](#filestarget)
@@ -29,11 +33,11 @@
 * [escapeContent](#escapecontent)
 * [clsNobaseMods](#clsnobasemods)
 
-### tmrget
+### target
 
 Тип: `String`. По умолчанию: `?.bh.js`.
 
-Имя таргета, куда будет записан результат сборки необходимых `bh.js`-файлов проекта — скомпилированный файл `?.bh.js`.
+Имя скомпилированного файла, куда будет записан результат сборки необходимых `bh.js`-файлов проекта.
 
 #### filesTarget
 
@@ -59,7 +63,7 @@
 
 Задает имена или пути для подключения внешних библиотек в пространстве имен `bh.lib` — `bh.lib.name`.
 
->Принцип работы описан в разделе [Подключение сторонних библиотек](README.md#Особенности-работы-пакета).
+> Принцип работы описан в разделе [Подключение сторонних библиотек](README.md#Особенности-работы-пакета).
 
 #### mimic
 
@@ -67,7 +71,7 @@
 
 Задает имена новых переменных.
 
->Принцип работы описан в разделе [Мимикрия под BEMHTML](README.md#Мимикрия-под-bemhtml).
+> Принцип работы описан в разделе [Мимикрия под BEMHTML](README.md#Мимикрия-под-bemhtml).
 
 #### scope
 
@@ -117,39 +121,43 @@
 Опция шаблонизатора BH. [Описание](https://github.com/bem/bh/blob/master/README.md#clsnobasemods).
 
 --------------------------------------
+
 **Пример**
 
-```javascript
+```js
 var BHBundleTech = require('enb-bh/techs/bh-bundle'),
     FileProvideTech = require('enb/techs/file-provider'),
-    bem = require('enb-bem-techs');
+    bemTechs = require('enb-bem-techs');
 
  module.exports = function(config) {
      config.node('bundle', function(node) {
-         // Получает FileList
+         // Получаем FileList
          node.addTechs([
              [FileProvideTech, { target: '?.bemdecl.js' }],
-             [bem.levels, levels: ['blocks']],
-             bem.deps,
-             bem.files
+             [bemTechs.levels, levels: ['blocks']],
+             bemTechs.deps,
+             bemTechs.files
          ]);
 
-         // Создает BH-файл
+         // Создаем BH-файл
          node.addTech(BHBundleTech);
          node.addTarget('?.bh.js');
      });
  };
 ```
 
-## bh-commonjs
+bh-commonjs
+-----------
 
-Собирает `bh.js`-файлы блоков с помощью `require` в один файл — `?.bh.js`-бандл. Предназначен для исполнения в Node.js. После сборки требуется наличие всех файлов, подключенных с помощью `require`.
-
-Результат сборки — `?.bh.js`-файл, который содержит подключения необходимых исходных `bh.js`-файлов и файла ядра из `node_modules`.
+Собирает `bh.js`-файлы блоков в один файл — `?.bh.js`-бандл, который используется для работы в Node.js. После сборки требуется наличие всех файлов, подключенных с помощью `require`.
 
 В шаблоны зависимости подключаются с помощью `require`. Все пути обрабатываются относительно того файла, в котором прописан `require`.
 
+Результат сборки — `?.bh.js`-файл, который содержит подключения необходимых исходных `bh.js`-файлов и файла ядра из `node_modules`.
+
 ### Опции
+
+Опции указываются в конфигурационном файле (.enb/make.js).
 
 * [target](#target-1)
 * [filesTarget](#filestarget-1)
@@ -193,7 +201,7 @@ var BHBundleTech = require('enb-bh/techs/bh-bundle'),
 
 Задает имена новых переменных.
 
->Принцип работы описан в разделе [Мимикрия под BEMHTML](README.md#Мимикрия-под-bemhtml).
+> Принцип работы описан в разделе [Мимикрия под BEMHTML](README.md#Мимикрия-под-bemhtml).
 
 #### jsAttrName
 
@@ -234,35 +242,39 @@ var BHBundleTech = require('enb-bh/techs/bh-bundle'),
 Опция шаблонизатора BH. [Описание](https://github.com/bem/bh/blob/master/README.md#clsnobasemods).
 
 --------------------------------------
+
 **Пример**
 
-```javascript
+```js
 var BHCommonJSTech = require('enb-bh/techs/bh-commonjs'),
     FileProvideTech = require('enb/techs/file-provider'),
-    bem = require('enb-bem-techs');
+    bemTechs = require('enb-bem-techs');
 
 module.exports = function(config) {
     config.node('bundle', function(node) {
-        // Получает FileList
+        // Получаем FileList
         node.addTechs([
             [FileProvideTech, { target: '?.bemdecl.js' }],
-            [bem.levels, levels: ['blocks']],
-            bem.deps,
-            bem.files
+            [bemTechs.levels, levels: ['blocks']],
+            bemTechs.deps,
+            bemTechs.files
         ]);
 
-        // Собирает BH-файл
+        // Собираем BH-файл
         node.addTech(BHCommonJSTech);
         node.addTarget('?.bh.js');
     });
 };
 ```
 
-## bemjson-to-html
+bemjson-to-html
+---------------
 
-Предназначен для сборки HTML-файла. Принимает на вход [BEMJSON](https://ru.bem.info/technology/bemjson/current/bemjson/) и скомпилированный `?.bh.js`-файл (результат работы технологий [bh-bundle](#bh-bundle) или [bh-commonjs](#bh-commonjs)), возвращает HTML.
+Предназначена для сборки HTML-файла. Обрабатывает [BEMJSON](https://ru.bem.info/technology/bemjson/current/bemjson/) и скомпилированный `?.bh.js`-файл (результат работы технологий [bh-bundle](#bh-bundle) или [bh-commonjs](#bh-commonjs)) для получения HTML.
 
 ### Опции
+
+Опции указываются в конфигурационном файле (.enb/make.js).
 
 * [bhFile](#bhfile)
 * [bemjsonFile](#bemjsonfile)
@@ -287,32 +299,33 @@ module.exports = function(config) {
 HTML-файл — результат применения скомпилированного шаблона к указанному BEMJSON-файлу.
 
 ---------------------------------
+
 **Пример**
 
-```javascript
+```js
 var BemjsonToHtmlTech = require('enb-bh/techs/bemjson-to-html'),
     BHCommonJSTech = require('enb-bh/techs/bh-commonjs'),
     FileProvideTech = require('enb/techs/file-provider'),
-    bem = require('enb-bem-techs');
+    bemTechs = require('enb-bem-techs');
 
 module.exports = function(config) {
     config.node('bundle', function(node) {
-        // Получает BEMJSON-файл
+        // Получаем BEMJSON-файл
         node.addTech([FileProvideTech, { target: '?.bemjson.js' }]);
 
-        // Получает FileList
+        // Получаем FileList
         node.addTechs([
-            [bem.levels, levels: ['blocks']],
-            bem.bemjsonToBemdecl,
-            bem.deps,
-            bem.files
+            [bemTechs.levels, levels: ['blocks']],
+            bemTechs.bemjsonToBemdecl,
+            bemTechs.deps,
+            bemTechs.files
         ]);
 
-        // Собирает BH-файл
+        // Собираем BH-файл
         node.addTech(BHCommonJSTech);
         node.addTarget('?.bh.js');
 
-        // Создает HTML-файл
+        // Создаем HTML-файл
         node.addTech(BemjsonToHtmlTech);
         node.addTarget('?.html');
     });

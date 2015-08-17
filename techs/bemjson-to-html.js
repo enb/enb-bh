@@ -20,7 +20,7 @@ var requireOrEval = require('enb/lib/fs/require-or-eval'),
  * var BemjsonToHtmlTech = require('enb-bh/techs/bemjson-to-html'),
  *     BHCommonJSTech = require('enb-bh/techs/bh-commonjs'),
  *     FileProvideTech = require('enb/techs/file-provider'),
- *     bem = require('enb-bem-techs');
+ *     bemTechs = require('enb-bem-techs');
  *
  * module.exports = function(config) {
  *     config.node('bundle', function(node) {
@@ -29,10 +29,10 @@ var requireOrEval = require('enb/lib/fs/require-or-eval'),
  *
  *         // get FileList
  *         node.addTechs([
- *             [bem.levels, levels: ['blocks']],
- *             bem.bemjsonToBemdecl,
- *             bem.deps,
- *             bem.files
+ *             [bemTechs.levels, levels: ['blocks']],
+ *             bemTechs.bemjsonToBemdecl,
+ *             bemTechs.deps,
+ *             bemTechs.files
  *         ]);
  *
  *         // build BH file
