@@ -10,14 +10,6 @@ var path = require('path'),
     EOL = require('os').EOL;
 
 describe('bh-commonjs', function () {
-    var mockBhCore = [
-        'function BH () {}',
-        'BH.prototype.apply = function() { return "^_^"; };',
-        'BH.prototype.match = function() {};',
-        'BH.prototype.setOptions = function() {};',
-        'module.exports = BH;'
-    ].join(EOL);
-
     afterEach(function () {
         mock.restore();
     });
@@ -30,6 +22,52 @@ describe('bh-commonjs', function () {
             html = '<a class="block"></a>';
 
         return assert(bemjson, html, templates);
+    });
+
+    describe('custom BH', function () {
+        it('must use custom BH', function () {
+            var bemjson = { block: 'block' },
+                html = '^_^',
+                options = {
+                    bhFilename: path.resolve('fake-bh.js')
+                };
+
+            return assert(bemjson, html, null, options);
+        });
+
+        it('must rebuild if bhFilename is changed', function () {
+            var bemjson = { block: 'block' },
+                html = '^_^',
+                options = {
+                    bhFilename: path.resolve('fake-bh.js')
+                },
+                bundle = prepare([]);
+
+            return bundle.runTech(Tech)
+                .then(function () {
+                    return bundle.runTechAndRequire(Tech, options);
+                })
+                .spread(function (BH) {
+                    BH.apply(bemjson).must.equal(html);
+                });
+        });
+
+        it('must use cached bhFile', function () {
+            var bemjson = { block: 'block' },
+                html = '<div class="block"></div>',
+                options = {
+                    bhFilename: path.resolve('fake-bh.js')
+                },
+                bundle = prepare([], { replaceBHCore: true });
+
+            return bundle.runTech(Tech)
+                .then(function () {
+                    return bundle.runTechAndRequire(Tech, options);
+                })
+                .spread(function (BH) {
+                    BH.apply(bemjson).must.equal(html);
+                });
+        });
     });
 
     describe('mode', function () {
@@ -267,44 +305,6 @@ describe('bh-commonjs', function () {
     });
 
     describe('caches', function () {
-        it('must use cached bhFile', function () {
-            var scheme = {
-                    blocks: {},
-                    bundle: {}
-                },
-                bundle, fileList;
-
-            scheme[bhCoreFilename] = mock.file({
-                content: fs.readFileSync(bhCoreFilename, 'utf-8'),
-                mtime: new Date(1)
-            });
-
-            /*
-             * Добавляем кастомное ядро с mtime для проверки кэша.
-             * Если mtime кастомного ядра совпадет с mtime родного ядра,
-             * то должно быть использовано родное(закешированное).
-             */
-            scheme['mock.bh.js'] = mock.file({
-                content: mockBhCore,
-                mtime: new Date(1)
-            });
-
-            mock(scheme);
-
-            bundle = new TestNode('bundle');
-            fileList = new FileList();
-            fileList.loadFromDirSync('blocks');
-            bundle.provideTechData('?.files', fileList);
-
-            return bundle.runTech(Tech)
-                .then(function () {
-                    return bundle.runTechAndRequire(Tech, { bhFile: 'mock.bh.js' });
-                })
-                .spread(function (BH) {
-                    BH.apply({ block: 'block' }).must.be('<div class="block"></div>');
-                });
-        });
-
         it('must ignore outdated cache of the templates', function () {
             var scheme = {
                     blocks: {
@@ -348,10 +348,21 @@ function bhWrap(str) {
     return 'module.exports = function(bh) {' + str + '};';
 }
 
-function build(templates, options) {
+function prepare(templates, opts) {
+    opts || (opts = {});
+
     var scheme = {
             blocks: {},
-            bundle: {}
+            bundle: {},
+            'fake-bh.js': mock.file({
+                content: [
+                    'function BH () {};',
+                    'BH.prototype.setOptions = function () {};',
+                    'BH.prototype.apply = function () { return "^_^"; };',
+                    'module.exports = BH;'
+                ].join(EOL),
+                mtime: new Date(opts.replaceBHCore ? 1 : 10)
+            })
         },
         bundle, fileList;
 
@@ -359,7 +370,10 @@ function build(templates, options) {
         scheme.blocks['block-' + i + '.bh.js'] = bhWrap(item);
     });
 
-    scheme[bhCoreFilename] = fs.readFileSync(bhCoreFilename, 'utf-8');
+    scheme[bhCoreFilename] = mock.file({
+        content: fs.readFileSync(bhCoreFilename, 'utf-8'),
+        mtime: new Date(1)
+    });
 
     mock(scheme);
 
@@ -367,6 +381,12 @@ function build(templates, options) {
     fileList = new FileList();
     fileList.loadFromDirSync('blocks');
     bundle.provideTechData('?.files', fileList);
+
+    return bundle;
+}
+
+function build(templates, options) {
+    var bundle = prepare(templates);
 
     return bundle.runTechAndRequire(Tech, options)
         .spread(function (BH) {
