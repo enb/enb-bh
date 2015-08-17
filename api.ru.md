@@ -22,6 +22,7 @@ bh-bundle
 * [target](#target)
 * [filesTarget](#filestarget)
 * [sourceSuffixes](#sourcesuffixes)
+* [bhFilename](#bhfilename)
 * [sourcemap](#sourcemap)
 * [requires](#requires)
 * [mimic](#mimic)
@@ -50,6 +51,16 @@ bh-bundle
 Тип: `String | String[]`. По умолчанию: `['bh.js']`.
 
 Суффиксы файлов, по которым отбираются файлы с BH-шаблонами для дальнейшей сборки.
+
+#### bhFilename
+
+Тип: `String`. По умолчанию: `require.resolve('bh/lib/bh.js')`.
+
+Путь к файлу с ядром BH.
+
+Следует использовать, если необходима нестандартная версия [шаблонизатора BH](https://ru.bem.info/technology/bh/).
+
+**Предупреждение:** технология [bh-bundle](#bh-bundle) гарантирует правильную работу только с шаблонизатором BH версии `4.1.0`
 
 #### sourcemap
 
@@ -162,6 +173,7 @@ bh-commonjs
 * [target](#target-1)
 * [filesTarget](#filestarget-1)
 * [sourceSuffixes](#sourcesuffixes-1)
+* [bhFilename](#bhfilename-1)
 * [devMode](#devmode)
 * [mimic](#mimic)
 * [jsAttrName](#jsattrname)
@@ -188,6 +200,16 @@ bh-commonjs
 Тип: `String | String[]`. По умолчанию: `['bh.js']`.
 
 Суффиксы файлов, по которым отбираются файлы с BH-шаблонами для дальнейшей сборки.
+
+#### bhFilename
+
+Тип: `String`. По умолчанию: `require.resolve('bh/lib/bh.js')`.
+
+Путь к файлу с ядром BH.
+
+Следует использовать, если необходима нестандартная версия [шаблонизатора BH](https://ru.bem.info/technology/bh/).
+
+**Предупреждение:** технология [bh-commonjs](#bh-commonjs) гарантирует правильную работу только с шаблонизатором BH версии `4.1.0` и выше.
 
 #### devMode
 
