@@ -4,6 +4,7 @@ var path = require('path'),
     TestNode = require('mock-enb/lib/mock-node'),
     Tech = require('../../../techs/bh-bundle'),
     FileList = require('enb/lib/file-list'),
+    bhCoreFilename = require.resolve('bh/lib/bh.js'),
     dropRequireCache = require('enb/lib/fs/drop-require-cache'),
     EOL = require('os').EOL;
 
@@ -135,6 +136,8 @@ function build(templates, options, lib) {
     templates && templates.forEach(function (item, i) {
         scheme.blocks['block-' + i + '.bh.js'] = bhWrap(item);
     });
+
+    scheme[bhCoreFilename] = fs.readFileSync(bhCoreFilename, 'utf-8');
 
     mock(scheme);
 

@@ -1,4 +1,5 @@
-var fs = require('fs'),
+var path = require('path'),
+    fs = require('fs'),
     mock = require('mock-fs'),
     TestNode = require('mock-enb/lib/mock-node'),
     Tech = require('../../../techs/bh-bundle'),
@@ -8,14 +9,6 @@ var fs = require('fs'),
     EOL = require('os').EOL;
 
 describe('bh-bundle', function () {
-    var mockBhCore = [
-        'function BH () {}',
-        'BH.prototype.apply = function() { return "^_^"; };',
-        'BH.prototype.match = function() {};',
-        'BH.prototype.setOptions = function() {};',
-        'module.exports = BH;'
-    ].join(EOL);
-
     afterEach(function () {
         mock.restore();
     });
@@ -28,6 +21,52 @@ describe('bh-bundle', function () {
             html = '<a class="block"></a>';
 
         return assert(bemjson, html, templates);
+    });
+
+    describe('custom BH', function () {
+        it('must use custom BH', function () {
+            var bemjson = { block: 'block' },
+                html = '^_^',
+                options = {
+                    bhFilename: path.resolve('fake-bh.js')
+                };
+
+            return assert(bemjson, html, null, options);
+        });
+
+        it('must rebuild if bhFilename is changed', function () {
+            var bemjson = { block: 'block' },
+                html = '^_^',
+                options = {
+                    bhFilename: path.resolve('fake-bh.js')
+                },
+                bundle = prepare([]);
+
+            return bundle.runTech(Tech)
+                .then(function () {
+                    return bundle.runTechAndRequire(Tech, options);
+                })
+                .spread(function (BH) {
+                    BH.apply(bemjson).must.equal(html);
+                });
+        });
+
+        it('must use cached bhFile', function () {
+            var bemjson = { block: 'block' },
+                html = '<div class="block"></div>',
+                options = {
+                    bhFilename: path.resolve('fake-bh.js')
+                },
+                bundle = prepare([], { replaceBHCore: true });
+
+            return bundle.runTech(Tech)
+                .then(function () {
+                    return bundle.runTechAndRequire(Tech, options);
+                })
+                .spread(function (BH) {
+                    BH.apply(bemjson).must.equal(html);
+                });
+        });
     });
 
     describe('scope', function () {
@@ -186,44 +225,6 @@ describe('bh-bundle', function () {
     });
 
     describe('caches', function () {
-        it('must use cached bhFile', function () {
-            var scheme = {
-                    blocks: {},
-                    bundle: {}
-                },
-                bundle, fileList;
-
-            scheme[bhCoreFilename] = mock.file({
-                content: fs.readFileSync(bhCoreFilename, 'utf-8'),
-                mtime: new Date(1)
-            });
-
-            /*
-             * Добавляем кастомное ядро с mtime для проверки кэша.
-             * Если mtime кастомного ядра совпадет с mtime родного ядра,
-             * то должно быть использовано родное(закешированное).
-             */
-            scheme['mock.bh.js'] = mock.file({
-                content: mockBhCore,
-                mtime: new Date(1)
-            });
-
-            mock(scheme);
-
-            bundle = new TestNode('bundle');
-            fileList = new FileList();
-            fileList.loadFromDirSync('blocks');
-            bundle.provideTechData('?.files', fileList);
-
-            return bundle.runTech(Tech)
-                .then(function () {
-                    return bundle.runTechAndRequire(Tech, { bhFile: 'mock.bh.js' });
-                })
-                .spread(function (bh) {
-                    bh.apply({ block: 'block' }).must.be('<div class="block"></div>');
-                });
-        });
-
         it('must ignore outdated cache of the templates', function () {
             var scheme = {
                     blocks: {
@@ -264,15 +265,15 @@ describe('bh-bundle', function () {
 
     it('must generate sourcemap', function () {
         var options = {
-                sourcemap: true,
-                bhFile: 'bh.js'
+                sourcemap: true
             },
             scheme = {
                 blocks: {},
-                bundle: {},
-                'bh.js': 'module.exports = BH;'
+                bundle: {}
             },
             bundle, fileList;
+
+        scheme[bhCoreFilename] = fs.readFileSync(bhCoreFilename, 'utf-8');
 
         mock(scheme);
 
@@ -292,10 +293,21 @@ function bhWrap(str) {
     return 'module.exports = function(bh) {' + str + '};';
 }
 
-function assert(bemjson, html, templates, options) {
+function prepare(templates, opts) {
+    opts || (opts = {});
+
     var scheme = {
             blocks: {},
-            bundle: {}
+            bundle: {},
+            'fake-bh.js': mock.file({
+                content: [
+                    'function BH () {};',
+                    'BH.prototype.setOptions = function () {};',
+                    'BH.prototype.apply = function () { return "^_^"; };',
+                    'module.exports = BH;'
+                ].join(EOL),
+                mtime: new Date(opts.replaceBHCore ? 1 : 10)
+            })
         },
         bundle, fileList;
 
@@ -303,7 +315,10 @@ function assert(bemjson, html, templates, options) {
         scheme.blocks['block-' + i + '.bh.js'] = bhWrap(item);
     });
 
-    scheme[bhCoreFilename] = fs.readFileSync(bhCoreFilename, 'utf-8');
+    scheme[bhCoreFilename] = mock.file({
+        content: fs.readFileSync(bhCoreFilename, 'utf-8'),
+        mtime: new Date(1)
+    });
 
     mock(scheme);
 
@@ -311,6 +326,12 @@ function assert(bemjson, html, templates, options) {
     fileList = new FileList();
     fileList.loadFromDirSync('blocks');
     bundle.provideTechData('?.files', fileList);
+
+    return bundle;
+}
+
+function assert(bemjson, html, templates, options) {
+    var bundle = prepare(templates);
 
     return bundle.runTechAndRequire(Tech, options)
         .spread(function (BH) {
