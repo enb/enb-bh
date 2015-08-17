@@ -36,7 +36,7 @@
 * [ __*major*__ ] Технологии `bh-client`, `bh-client-module` и `bh-server-include` объединены в одну — [bh-bundle](api.ru.md#bh-bundle) ([#22]).
 * [ __*major*__ ] Технология `bh-server` переименована в [bh-commonjs](api.ru.md#bh-commonjs) ([#22]).
 * [ __*major*__ ] Технология `html-from-bemjson` переименована в [bemjson-to-html](api.ru.md#bemjson-to-html) ([#52]).
-* [ __*major*__ ] Технология `bemjson-to-html-i18n` была удалена. Для работы с локализацией нужно использовать технологии из пакета `enb-bem-i18n` ([#57]).
+* [ __*major*__ ] Технология `html-from-bemjson-i18n` была удалена. Для работы с локализацией нужно использовать технологии из пакета `enb-bem-i18n` ([#57]).
 
 #### Опции технологий
 
