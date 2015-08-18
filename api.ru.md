@@ -27,12 +27,7 @@ bh-bundle
 * [requires](#requires)
 * [mimic](#mimic)
 * [scope](#scope)
-* [jsAttrName](#jsattrname)
-* [jsAttrScheme](#jsattrscheme)
-* [jsCls](#jscls)
-* [jsElem](#jselem)
-* [escapeContent](#escapecontent)
-* [clsNobaseMods](#clsnobasemods)
+* [bhOptions](#bhoptions)
 
 ### target
 
@@ -95,41 +90,13 @@ bh-bundle
 * `template` — изолирует выполнение шаблонов друг от друга;
 * `global`— позволяет выполнять шаблоны в общей области видимости.
 
-#### jsAttrName
+#### bhOptions
 
-Тип: `String`. По умолчанию: `data-bem`.
+Тип: `Object`. По умолчанию: `{}`.
 
-Опция шаблонизатора BH. [Описание](https://ru.bem.info/technology/bh/current/about/#jsattrname).
+Настраивает шаблонизатор BH с помощью переданных опций.
 
-#### jsAttrScheme
-
-Тип: `String`. По умолчанию: `json`.
-
-Опция шаблонизатора BH. [Описание](https://ru.bem.info/technology/bh/current/about/#jsattrscheme).
-
-#### jsCls
-
-Тип: `String | Boolean`. По умолчанию: `i-bem`.
-
-Опция шаблонизатора BH. [Описание](https://ru.bem.info/technology/bh/current/about/#jscls).
-
-#### jsElem
-
-Тип: `Boolean`. По умолчанию: `true`.
-
-Опция шаблонизатора BH. [Описание](https://github.com/bem/bh/blob/master/README.md#jselem).
-
-#### escapeContent
-
-Тип: `Boolean`. По умолчанию: `false`.
-
-Опция шаблонизатора BH. [Описание](https://ru.bem.info/technology/bh/current/about/#escapecontent).
-
-#### clsNobaseMods
-
-Тип: `Boolean`. По умолчанию: `false`.
-
-Опция шаблонизатора BH. [Описание](https://github.com/bem/bh/blob/master/README.md#clsnobasemods).
+> Возможные настройки описаны в [документации шаблонизатора](https://ru.bem.info/technology/bh/v4.1.1/about/#Настройка).
 
 --------------------------------------
 
@@ -176,12 +143,7 @@ bh-commonjs
 * [bhFilename](#bhfilename-1)
 * [devMode](#devmode)
 * [mimic](#mimic)
-* [jsAttrName](#jsattrname)
-* [jsAttrScheme](#jsattrscheme)
-* [jsCls](#jscls)
-* [jsElem](#jselem)
-* [escapeContent](#escapecontent)
-* [clsNobaseMods](#clsnobasemods)
+* [bhOptions](#bhoptions-1)
 
 #### target
 
@@ -225,43 +187,13 @@ bh-commonjs
 
 > Принцип работы описан в разделе [Мимикрия под BEMHTML](README.md#Мимикрия-под-bemhtml).
 
-#### jsAttrName
+#### bhOptions
 
-Тип: `String`. По умолчанию: `data-bem`.
+Тип: `Object`. По умолчанию: `{}`.
 
-Опция шаблонизатора BH. [Описание](https://ru.bem.info/technology/bh/current/about/#jsattrname).
+Настраивает шаблонизатор BH с помощью переданных опций.
 
-Атрибут блока с параметрами инициализации.
-
-#### jsAttrScheme
-
-Тип: `String`. По умолчанию: `json`.
-
-Опция шаблонизатора BH. [Описание](https://ru.bem.info/technology/bh/current/about/#jsattrscheme).
-
-#### jsCls
-
-Тип: `String | Boolean`. По умолчанию: `i-bem`.
-
-Опция шаблонизатора BH. [Описание](https://ru.bem.info/technology/bh/current/about/#jscls).
-
-#### jsElem
-
-Тип: `Boolean`. По умолчанию: `true`.
-
-Опция шаблонизатора BH. [Описание](https://github.com/bem/bh/blob/master/README.md#jselem).
-
-#### escapeContent
-
-Тип: `Boolean`. По умолчанию: `false`.
-
-Опция шаблонизатора BH. [Описание](https://ru.bem.info/technology/bh/current/about/#escapecontent).
-
-#### clsNobaseMods
-
-Тип: `Boolean`. По умолчанию: `false`.
-
-Опция шаблонизатора BH. [Описание](https://github.com/bem/bh/blob/master/README.md#clsnobasemods).
+> Возможные настройки описаны в [документации шаблонизатора](https://ru.bem.info/technology/bh/v4.1.1/about/#Настройка).
 
 --------------------------------------
 
