@@ -111,23 +111,23 @@ describe('bh-bundle', function () {
     describe('jsAttr params', function () {
         it('must apply default jsAttrName and jsAttrScheme params', function () {
             var bemjson = { block: 'block', js: true },
-                html = '<div class="block i-bem" data-bem=\'{"block":{}}\'></div>';
+                html = '<div class="block i-bem" onclick=\'return {"block":{}}\'></div>';
 
             return assert(bemjson, html);
         });
 
         it('must redefine jsAttrName', function () {
             var bemjson = { block: 'block', js: true },
-                html = '<div class="block i-bem" onclick=\'{"block":{}}\'></div>',
-                options = { jsAttrName: 'onclick' };
+                html = '<div class="block i-bem" data-bem=\'return {"block":{}}\'></div>',
+                options = { bhOptions: { jsAttrName: 'data-bem' } };
 
             return assert(bemjson, html, null, options);
         });
 
         it('must redefine jsAttrScheme', function () {
             var bemjson = { block: 'block', js: true },
-                html = '<div class="block i-bem" data-bem=\'return {"block":{}}\'></div>',
-                options = { jsAttrScheme: 'js' };
+                html = '<div class="block i-bem" onclick=\'{"block":{}}\'></div>',
+                options = { bhOptions: { jsAttrScheme: 'json' } };
 
             return assert(bemjson, html, null, options);
         });
@@ -136,31 +136,31 @@ describe('bh-bundle', function () {
     describe('jsCls', function () {
         it('must use dafault value', function () {
             var bemjson = { block: 'block', js: true },
-                html = '<div class="block i-bem" data-bem=\'{"block":{}}\'></div>';
+                html = '<div class="block i-bem" onclick=\'return {"block":{}}\'></div>';
 
             return assert(bemjson, html);
         });
 
         it('must redefine jsCls value', function () {
             var bemjson = { block: 'block', js: true },
-                html = '<div class="block js" data-bem=\'{"block":{}}\'></div>',
-                options = { jsCls: 'js' };
+                html = '<div class="block js" onclick=\'return {"block":{}}\'></div>',
+                options = { bhOptions: { jsCls: 'js' } };
 
             return assert(bemjson, html, null, options);
         });
 
         it('must remove i-bem CSS-class', function () {
             var bemjson = { block: 'block', js: true },
-                html = '<div class="block" data-bem=\'{"block":{}}\'></div>',
-                options = { jsCls: false };
+                html = '<div class="block" onclick=\'return {"block":{}}\'></div>',
+                options = { bhOptions: { jsCls: false } };
 
             return assert(bemjson, html, null, options);
         });
 
         it('must remove i-bem CSS-class by empty value', function () {
             var bemjson = { block: 'block', js: true },
-                html = '<div class="block" data-bem=\'{"block":{}}\'></div>',
-                options = { jsCls: '' };
+                html = '<div class="block" onclick=\'return {"block":{}}\'></div>',
+                options = { bhOptions: { jsCls: '' } };
 
             return assert(bemjson, html, null, options);
         });
@@ -169,16 +169,16 @@ describe('bh-bundle', function () {
     describe('jsElem', function () {
         it('must add `i-bem` to elem if jsElem enabled', function () {
             var bemjson = { block: 'block', elem: 'elem', js: true },
-                html = '<div class="block__elem i-bem" data-bem=\'{"block__elem":{}}\'></div>',
-                options = { jsElem: true };
+                html = '<div class="block__elem i-bem" onclick=\'return {"block__elem":{}}\'></div>',
+                options = { bhOptions: { jsElem: true } };
 
             return assert(bemjson, html, null, options);
         });
 
         it('must not add `i-bem` to elem if jsElem disabled', function () {
             var bemjson = { block: 'block', elem: 'elem', js: true },
-                html = '<div class="block__elem" data-bem=\'{"block__elem":{}}\'></div>',
-                options = { jsElem: false };
+                html = '<div class="block__elem" onclick=\'return {"block__elem":{}}\'></div>',
+                options = { bhOptions: { jsElem: false } };
 
             return assert(bemjson, html, null, options);
         });
@@ -201,7 +201,7 @@ describe('bh-bundle', function () {
                 ],
                 bemjson = { block: 'block' },
                 html = '<div class="block">&lt;script&gt;</div>',
-                options = { escapeContent: true };
+                options = { bhOptions: { escapeContent: true } };
 
             return assert(bemjson, html, templates, options);
         });
@@ -218,7 +218,7 @@ describe('bh-bundle', function () {
         it('must not use block\'s name for CSS-classes when clsNobaseMods param is true', function () {
             var bemjson = { block: 'block', mods: { disabled: true, type: 'submit' } },
                 html = '<div class="block _disabled _type_submit"></div>',
-                options = { clsNobaseMods: true };
+                options = { bhOptions: { clsNobaseMods: true } };
 
             return assert(bemjson, html, null, options);
         });
