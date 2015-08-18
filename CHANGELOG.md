@@ -42,7 +42,7 @@
 
 * В технологию `bh-bundle` добавлена опция [scope](api.ru.md#scope) ([#75], [#80]).
 * В технологию `bh-common` добавлена опция [devMode](api.ru.md#devmode) ([#78]).
-* [ __*major*__ ] Теперь невозможно переопределить модуль `bh`, так как опция `bhFile` была удалена из всех технологий ([#59]).
+* [ __*major*__ ] Чтобы переопределить модуль `bh`, следует использовать опцию [bhFilename](api.ru.md#bhfilename) вместо `bhFile` ([#59], [#118]).
 * [ __*major*__ ] Из технологии `bemjson-to-html` были удалены устаревшие опции: `destTarget` и `bemjsonTarget`. Вместо них следует использовать `target` и `bemjsonFile`, соответственно. ([#85]).
 
 ### Зависимости
@@ -142,6 +142,7 @@
 [bh#115]: https://github.com/bem/bh/pull/115
 [bh#96]: https://github.com/bem/bh/pull/96
 
+[#118]: https://github.com/enb-bem/enb-bh/issues/118
 [#101]: https://github.com/enb-bem/enb-bh/issues/101
 [#85]: https://github.com/enb-bem/enb-bh/issues/85
 [#80]: https://github.com/enb-bem/enb-bh/issues/80

@@ -20,6 +20,7 @@ var vow = require('vow'),
  * @param {String}      [options.target='?.bh.js']          Path to a target with compiled file.
  * @param {String}      [options.filesTarget='?.files']     Path to a target with FileList.
  * @param {String[]}    [options.sourceSuffixes='bh.js']    Files with specified suffixes involved in the assembly.
+ * @param {String}      [options.bhFilename]                Path to file with BH core.
  * @param {Object}      [options.requires]                  Names for dependencies to `BH.lib.name`.
  * @param {String[]}    [options.mimic]                     Names for export.
  * @param {String}      [options.scope='template']          Scope of template execution.
@@ -55,6 +56,7 @@ var vow = require('vow'),
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-bundle')
     .target('target', '?.bh.js')
+    .defineOption('bhFilename', require.resolve('bh/lib/bh.js'))
     .defineOption('requires', {})
     .defineOption('mimic', ['bh'])
     .defineOption('jsAttrName', 'data-bem')
@@ -66,6 +68,12 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('sourcemap', false)
     .defineOption('scope', 'template')
     .useFileList(['bh.js'])
+    .needRebuild(function (cache) {
+        return cache.needRebuildFile('bh-file', this._bhFilename);
+    })
+    .saveCache(function (cache) {
+        cache.cacheFileInfo('bh-file', this._bhFilename);
+    })
     .builder(function (files) {
         return this._readTemplates(files)
             .then(function (sources) {
@@ -85,6 +93,7 @@ module.exports = require('enb/lib/build-flow').create()
             var opts = {
                 filename: this.node.resolvePath(this._target),
                 dirname: this.node.getDir(),
+                bhFilename: this._bhFilename,
                 sourcemap: this._sourcemap,
                 jsAttrName: this._jsAttrName,
                 jsAttrScheme: this._jsAttrScheme,

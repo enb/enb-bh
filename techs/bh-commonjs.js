@@ -1,5 +1,4 @@
-var coreFilename = require.resolve('bh/lib/bh.js'),
-    EOL = require('os').EOL;
+var EOL = require('os').EOL;
 
 /**
  * @class BHCommonJSTech
@@ -16,6 +15,7 @@ var coreFilename = require.resolve('bh/lib/bh.js'),
  * @param {String}      [options.target='?.bh.js']          Path to a target with compiled file.
  * @param {String}      [options.filesTarget='?.files']     Path to a target with FileList.
  * @param {String[]}    [options.sourceSuffixes='bh.js']    Files with specified suffixes involved in the assembly.
+ * @param {String}      [options.bhFilename]                Path to file with BH core.
  * @param {String[]}    [options.mimic]                     Names for export.
  * @param {Boolean}     [options.devMode=true]              Drops cache for `require` of source templates.
  * @param {String}      [options.jsAttrName='data-bem']     Sets `jsAttrName` option for BH core.
@@ -28,16 +28,16 @@ var coreFilename = require.resolve('bh/lib/bh.js'),
  * @example
  * var BHCommonJSTech = require('enb-bh/techs/bh-commonjs'),
  *     FileProvideTech = require('enb/techs/file-provider'),
- *     bemTechs = require('enb-bem-techs');
+ *     bem = require('enb-bem-techs');
  *
  * module.exports = function(config) {
  *     config.node('bundle', function(node) {
  *         // get FileList
  *         node.addTechs([
  *             [FileProvideTech, { target: '?.bemdecl.js' }],
- *             [bemTechs.levels, levels: ['blocks']],
- *             bemTechs.deps,
- *             bemTechs.files
+ *             [bem.levels, levels: ['blocks']],
+ *             bem.deps,
+ *             bem.files
  *         ]);
  *
  *         // build BH file
@@ -49,6 +49,7 @@ var coreFilename = require.resolve('bh/lib/bh.js'),
 module.exports = require('enb/lib/build-flow').create()
     .name('bh-commonjs')
     .target('target', '?.bh.js')
+    .defineOption('bhFilename', require.resolve('bh/lib/bh.js'))
     .defineOption('mimic', ['bh'])
     .defineOption('devMode', true)
     .defineOption('jsAttrName', 'data-bem')
@@ -58,11 +59,16 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('escapeContent', false)
     .defineOption('clsNobaseMods', false)
     .useFileList(['bh.js'])
+    .needRebuild(function (cache) {
+        return cache.needRebuildFile('bh-file', this._bhFilename);
+    })
+    .saveCache(function (cache) {
+        cache.cacheFileInfo('bh-file', this._bhFilename);
+    })
     .builder(function (bhFiles) {
         return this._compile(bhFiles);
     })
     .methods(/** @lends BHBundleTech.prototype */{
-
         /**
          * Creates code of `dropRequireCache` function.
          *
@@ -121,12 +127,13 @@ module.exports = require('enb/lib/build-flow').create()
          * @returns {String} compiled code of BH module.
          */
         _compile: function (bhFiles) {
-            var devMode = this._devMode,
+            var bhFilename = this._bhFilename,
+                devMode = this._devMode,
                 mimic = [].concat(this._mimic);
 
             return [
                 devMode ? this._generateDropRequireCacheFunc() : '',
-                this._compileRequire('BH', coreFilename, devMode),
+                this._compileRequire('BH', bhFilename, devMode),
                 'var bh = new BH();',
                 'bh.setOptions({',
                 '   jsAttrName: \'' + this._jsAttrName + '\',',
