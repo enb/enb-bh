@@ -13,19 +13,6 @@
 * Реализована возможность добавлять класс `i-bem` к элементам ([bh#122]).
 * Добавлена поддержка CSS-классов без указания принадлежности к блоку ([bh#132]).
 
-#### Настройка BH
-
-Изменены значения по умолчанию для хранения JS-данных в атрибуте:
-
-* [ __*major*__ ] Опция [jsAttrName](api.ru.md#jsattrname): вместо `onclick` используется атрибут `data-bem` ([#50]).
-* [ __*major*__ ] Опция [jsAttrScheme](api.ru.md#jsattrscheme): данные храняться в `json`, а не в `js` формате ([#51]).
-
-Для конфигурации шаблонизатора в технологии добавлены следующие опции:
-
-* [jsCls](api.ru.md#jscls) ([#49]).
-* [jsElem](api.ru.md#jselem) ([#26]).
-* [escapeContent](api.ru.md#escapecontent) ([#66]).
-
 ### Новая функциональность
 
 * [Подключение сторонних библиотек](README.md#Подключение-сторонних-библиотек) c помощью опции [requires](api.ru.md#requires) ([#64]).
@@ -40,8 +27,12 @@
 
 #### Опции технологий
 
-* В технологию `bh-bundle` добавлена опция [scope](api.ru.md#scope) ([#75], [#80]).
-* В технологию `bh-common` добавлена опция [devMode](api.ru.md#devmode) ([#78]).
+* В технологию [bh-bundle](api.ru.md#bh-bundle) добавлена опция [scope](api.ru.md#scope) ([#75], [#80]).
+* В технологию [bh-commonjs](api.ru.md#bh-commonjs) добавлена опция [devMode](api.ru.md#devmode) ([#78]).
+* [ __*major*__ ] В технологии [bh-bundle](api.ru.md#bh-bundle) и [bh-commonjs](api.ru.md#bh-commonjs) добавлена опция [bhOptions](api.ru.md#bhoptions) ([#119]). Ее следует использовать вместо следующих опций, которые были удалены:
+  * `jsAttrName`
+  * `jsAttrScheme`
+  * `clsNobaseMods`
 * [ __*major*__ ] Чтобы переопределить модуль `bh`, следует использовать опцию [bhFilename](api.ru.md#bhfilename) вместо `bhFile` ([#59], [#118]).
 * [ __*major*__ ] Из технологии `bemjson-to-html` были удалены устаревшие опции: `destTarget` и `bemjsonTarget`. Вместо них следует использовать `target` и `bemjsonFile`, соответственно. ([#85]).
 
@@ -142,6 +133,7 @@
 [bh#115]: https://github.com/bem/bh/pull/115
 [bh#96]: https://github.com/bem/bh/pull/96
 
+[#119]: https://github.com/enb-bem/enb-bh/issues/119
 [#118]: https://github.com/enb-bem/enb-bh/issues/118
 [#101]: https://github.com/enb-bem/enb-bh/issues/101
 [#85]: https://github.com/enb-bem/enb-bh/issues/85
