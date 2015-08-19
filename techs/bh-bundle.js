@@ -25,12 +25,7 @@ var vow = require('vow'),
  * @param {String[]}    [options.mimic]                     Names for export.
  * @param {String}      [options.scope='template']          Scope of template execution.
  * @param {Boolean}     [options.sourcemap=false]           Includes inline source maps.
- * @param {String}      [options.jsAttrName='data-bem']     Sets `jsAttrName` option for BH core.
- * @param {String}      [options.jsAttrScheme='json']       Sets `jsAttrScheme` option for BH core.
- * @param {String}      [options.jsCls='i-bem']             Sets `jsCls` option for BH core.
- * @param {Boolean}     [options.jsElem=true]               Sets `jsElem` option for BH core.
- * @param {Boolean}     [options.escapeContent=false]       Sets `escapeContent` option for BH core.
- * @param {Boolean}     [options.clsNobaseMods=false]       Sets `clsNobaseMods` option for BH core.
+ * @param {Object}      [options.bhOptions={}]              Sets option for BH core.
  *
  * @example
  * var BHBundleTech = require('enb-bh/techs/bh-bundle'),
@@ -59,12 +54,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('bhFilename', require.resolve('bh/lib/bh.js'))
     .defineOption('requires', {})
     .defineOption('mimic', ['bh'])
-    .defineOption('jsAttrName', 'data-bem')
-    .defineOption('jsAttrScheme', 'json')
-    .defineOption('jsCls', 'i-bem')
-    .defineOption('jsElem', true)
-    .defineOption('escapeContent', false)
-    .defineOption('clsNobaseMods', false)
+    .defineOption('bhOptions', {})
     .defineOption('sourcemap', false)
     .defineOption('scope', 'template')
     .useFileList(['bh.js'])
@@ -95,15 +85,10 @@ module.exports = require('enb/lib/build-flow').create()
                 dirname: this.node.getDir(),
                 bhFilename: this._bhFilename,
                 sourcemap: this._sourcemap,
-                jsAttrName: this._jsAttrName,
-                jsAttrScheme: this._jsAttrScheme,
-                jsCls: this._jsCls,
-                jsElem: this._jsElem,
-                escapeContent: this._escapeContent,
-                clsNobaseMods: this._clsNobaseMods,
                 scope: this._scope,
                 mimic: [].concat(this._mimic),
-                requires: this._requires
+                requires: this._requires,
+                bhOptions: this._bhOptions
             };
 
             return compile(sources, opts);

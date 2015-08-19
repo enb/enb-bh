@@ -18,12 +18,7 @@ var EOL = require('os').EOL;
  * @param {String}      [options.bhFilename]                Path to file with BH core.
  * @param {String[]}    [options.mimic]                     Names for export.
  * @param {Boolean}     [options.devMode=true]              Drops cache for `require` of source templates.
- * @param {String}      [options.jsAttrName='data-bem']     Sets `jsAttrName` option for BH core.
- * @param {String}      [options.jsAttrScheme='json']       Sets `jsAttrScheme` option for BH core.
- * @param {String}      [options.jsCls='i-bem']             Sets `jsCls` option for BH core.
- * @param {Boolean}     [options.jsElem=true]               Sets `jsElem` option for BH core.
- * @param {Boolean}     [options.escapeContent=false]       Sets `escapeContent` option for BH core.
- * @param {Boolean}     [options.clsNobaseMods=false]       Sets `clsNobaseMods` option for BH core.
+ * @param {Object}      [options.bhOptions={}]              Sets option for BH core.
  *
  * @example
  * var BHCommonJSTech = require('enb-bh/techs/bh-commonjs'),
@@ -52,12 +47,7 @@ module.exports = require('enb/lib/build-flow').create()
     .defineOption('bhFilename', require.resolve('bh/lib/bh.js'))
     .defineOption('mimic', ['bh'])
     .defineOption('devMode', true)
-    .defineOption('jsAttrName', 'data-bem')
-    .defineOption('jsAttrScheme', 'json')
-    .defineOption('jsCls', 'i-bem')
-    .defineOption('jsElem', true)
-    .defineOption('escapeContent', false)
-    .defineOption('clsNobaseMods', false)
+    .defineOption('bhOptions', {})
     .useFileList(['bh.js'])
     .needRebuild(function (cache) {
         return cache.needRebuildFile('bh-file', this._bhFilename);
@@ -135,14 +125,7 @@ module.exports = require('enb/lib/build-flow').create()
                 devMode ? this._generateDropRequireCacheFunc() : '',
                 this._compileRequire('BH', bhFilename, devMode),
                 'var bh = new BH();',
-                'bh.setOptions({',
-                '   jsAttrName: \'' + this._jsAttrName + '\',',
-                '   jsAttrScheme: \'' + this._jsAttrScheme + '\',',
-                '   jsCls: ' + (this._jsCls ? ('\'' + this._jsCls + '\'') : false) + ',',
-                '   jsElem: ' + this._jsElem + ',',
-                '   escapeContent: ' + this._escapeContent + ',',
-                '   clsNobaseMods: ' + this._clsNobaseMods,
-                '});',
+                'bh.setOptions(' + JSON.stringify(this._bhOptions) + ');',
                 '',
                 bhFiles.map(function (file) {
                     return this._compileRequire(null, file.fullname, devMode);
