@@ -229,8 +229,7 @@ bh.match('block', function (ctx) {
 {
     requires: {
         moment: {
-            globals: 'moment',     // Имя переменной в глобальной видимости, куда будет предоставлен модуль `moment`
-            commonJS: 'moment',    // Путь к модулю CommonJS относительно собираемого файла
+            commonJS: 'moment'
         }
     }
 }
