@@ -1,6 +1,8 @@
-var requireOrEval = require('enb/lib/fs/require-or-eval'),
-    asyncRequire = require('enb/lib/fs/async-require'),
-    dropRequireCache = require('enb/lib/fs/drop-require-cache');
+var enb = require('enb'),
+    buildFlow = enb.buildFlow || require('enb/lib/build-flow'),
+    requireOrEval = require('enb-require-or-eval'),
+    asyncRequire = require('enb-async-require'),
+    clearRequire = require('clear-require');
 
 /**
  * @class BemjsonToHtmlTech
@@ -45,17 +47,17 @@ var requireOrEval = require('enb/lib/fs/require-or-eval'),
  *     });
  * };
  */
-module.exports = require('enb/lib/build-flow').create()
+module.exports = buildFlow.create()
     .name('bemjson-to-html')
     .target('target', '?.html')
     .useSourceFilename('bhFile', '?.bh.js')
     .useSourceFilename('bemjsonFile', '?.bemjson.js')
     .builder(function (bhFilename, bemjsonFilename) {
-        dropRequireCache(require, bemjsonFilename);
+        clearRequire(bemjsonFilename);
 
         return requireOrEval(bemjsonFilename)
             .then(function (json) {
-                dropRequireCache(require, bhFilename);
+                clearRequire(bhFilename);
 
                 return asyncRequire(bhFilename)
                     .then(function (BH) {

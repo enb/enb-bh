@@ -1,4 +1,6 @@
-var EOL = require('os').EOL;
+var EOL = require('os').EOL,
+    enb = require('enb'),
+    buildFlow = enb.buildFlow || require('enb/lib/build-flow');
 
 /**
  * @class BHCommonJSTech
@@ -41,7 +43,7 @@ var EOL = require('os').EOL;
  *     });
  * };
  */
-module.exports = require('enb/lib/build-flow').create()
+module.exports = buildFlow.create()
     .name('bh-commonjs')
     .target('target', '?.bh.js')
     .defineOption('bhFilename', require.resolve('bh/lib/bh.js'))

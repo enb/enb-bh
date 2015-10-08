@@ -4,8 +4,9 @@ var path = require('path'),
     TestNode = require('mock-enb/lib/mock-node'),
     Tech = require('../../../techs/bh-bundle'),
     FileList = require('enb/lib/file-list'),
+    loadDirSync = require('mock-enb/utils/dir-utils').loadDirSync,
     bhCoreFilename = require.resolve('bh/lib/bh.js'),
-    dropRequireCache = require('enb/lib/fs/drop-require-cache'),
+    clearRequire = require('clear-require'),
     EOL = require('os').EOL;
 
 describe('bh-bundle --node', function () {
@@ -143,7 +144,7 @@ function build(templates, options, lib) {
 
     bundle = new TestNode('bundle');
     fileList = new FileList();
-    fileList.loadFromDirSync('blocks');
+    fileList.addFiles(loadDirSync('blocks'));
     bundle.provideTechData('?.files', fileList);
 
     return bundle.runTech(Tech, options)
@@ -156,7 +157,7 @@ function build(templates, options, lib) {
 
             fs.writeFileSync(filename, contents);
 
-            dropRequireCache(require, filename);
+            clearRequire(filename);
 
             return require(filename);
         });
