@@ -31,10 +31,10 @@ var enb = require('enb'),
  *
  *         // get FileList
  *         node.addTechs([
- *             [bemTechs.levels, levels: ['blocks']],
- *             bemTechs.bemjsonToBemdecl,
- *             bemTechs.deps,
- *             bemTechs.files
+ *             [bemTechs.levels, { levels: ['blocks'] }],
+ *             [bemTechs.bemjsonToBemdecl],
+ *             [bemTechs.deps],
+ *             [bemTechs.files]
  *         ]);
  *
  *         // build BH file

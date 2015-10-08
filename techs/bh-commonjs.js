@@ -32,9 +32,9 @@ var EOL = require('os').EOL,
  *         // get FileList
  *         node.addTechs([
  *             [FileProvideTech, { target: '?.bemdecl.js' }],
- *             [bem.levels, levels: ['blocks']],
- *             bem.deps,
- *             bem.files
+ *             [bem.levels, { levels: ['blocks'] }],
+ *             [bem.deps],
+ *             [bem.files]
  *         ]);
  *
  *         // build BH file

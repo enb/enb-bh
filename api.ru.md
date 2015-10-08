@@ -112,9 +112,9 @@ var BHBundleTech = require('enb-bh/techs/bh-bundle'),
          // Получаем FileList
          node.addTechs([
              [FileProvideTech, { target: '?.bemdecl.js' }],
-             [bemTechs.levels, levels: ['blocks']],
-             bemTechs.deps,
-             bemTechs.files
+             [bemTechs.levels, { levels: ['blocks'] }],
+             [bemTechs.deps],
+             [bemTechs.files]
          ]);
 
          // Создаем BH-файл
@@ -209,9 +209,9 @@ module.exports = function(config) {
         // Получаем FileList
         node.addTechs([
             [FileProvideTech, { target: '?.bemdecl.js' }],
-            [bemTechs.levels, levels: ['blocks']],
-            bemTechs.deps,
-            bemTechs.files
+            [bemTechs.levels, { levels: ['blocks'] }],
+            [bemTechs.deps],
+            [bemTechs.files]
         ]);
 
         // Собираем BH-файл
@@ -269,10 +269,10 @@ module.exports = function(config) {
 
         // Получаем FileList
         node.addTechs([
-            [bemTechs.levels, levels: ['blocks']],
-            bemTechs.bemjsonToBemdecl,
-            bemTechs.deps,
-            bemTechs.files
+            [bemTechs.levels, { levels: ['blocks'] }],
+            [bemTechs.bemjsonToBemdecl],
+            [bemTechs.deps],
+            [bemTechs.files]
         ]);
 
         // Собираем BH-файл

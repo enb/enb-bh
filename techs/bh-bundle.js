@@ -39,9 +39,9 @@ var vow = require('vow'),
  *         // get FileList
  *         node.addTechs([
  *             [FileProvideTech, { target: '?.bemdecl.js' }],
- *             [bemTechs.levels, levels: ['blocks']],
- *             bemTechs.deps,
- *             bemTechs.files
+ *             [bemTechs.levels, { levels: ['blocks'] }],
+ *             [bemTechs.deps],
+ *             [bemTechs.files]
  *         ]);
  *
  *         // build BH file
