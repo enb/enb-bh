@@ -3,6 +3,7 @@ var fs = require('fs'),
     mock = require('mock-fs'),
     TestNode = require('mock-enb/lib/mock-node'),
     FileList = require('enb/lib/file-list'),
+    loadDirSync = require('mock-enb/utils/dir-utils').loadDirSync,
     Tech = require('../../../techs/bh-bundle'),
     bhCoreFilename = require.resolve('bh/lib/bh.js'),
     htmlFilename = path.join(__dirname, '..', '..', 'fixtures', 'browser--ym.html'),
@@ -205,7 +206,7 @@ function runTest(testContent, options, template, lib) {
 
     bundle = new TestNode('bundle');
     fileList = new FileList();
-    fileList.loadFromDirSync('blocks');
+    fileList.addFiles(loadDirSync('blocks'));
     bundle.provideTechData('?.files', fileList);
 
     return bundle.runTech(Tech, options)

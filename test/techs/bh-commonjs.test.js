@@ -4,9 +4,10 @@ var path = require('path'),
     TestNode = require('mock-enb/lib/mock-node'),
     Tech = require('../../techs/bh-commonjs'),
     FileList = require('enb/lib/file-list'),
+    loadDirSync = require('mock-enb/utils/dir-utils').loadDirSync,
     bhCoreFilename = require.resolve('bh/lib/bh.js'),
     writeFile = require('../lib/write-file'),
-    dropRequireCache = require('enb/lib/fs/drop-require-cache'),
+    clearRequire = require('clear-require'),
     EOL = require('os').EOL;
 
 describe('bh-commonjs', function () {
@@ -84,6 +85,9 @@ describe('bh-commonjs', function () {
                 })
                 .then(function (BH) {
                     BH.apply(bemjson).must.equal(html);
+                })
+                .always(function () {
+                    clearRequire(path.resolve('blocks', 'block-0.bh.js'));
                 });
         });
 
@@ -93,8 +97,6 @@ describe('bh-commonjs', function () {
                 },
                 bemjson = { block: 'block' },
                 html = '<div class="block"></div>';
-
-            dropRequireCache(require, path.resolve('blocks', 'block-0.bh.js'));
 
             return build(['bh.match("block", function() {});'], opts)
                 .then(function () {
@@ -260,7 +262,7 @@ describe('bh-commonjs', function () {
 
             bundle = new TestNode('bundle');
             fileList = new FileList();
-            fileList.loadFromDirSync('blocks');
+            fileList.addFiles(loadDirSync('blocks'));
             bundle.provideTechData('?.files', fileList);
 
             return bundle.runTechAndRequire(Tech)
@@ -320,7 +322,7 @@ describe('bh-commonjs', function () {
 
             bundle = new TestNode('bundle');
             fileList = new FileList();
-            fileList.loadFromDirSync('blocks');
+            fileList.addFiles(loadDirSync('blocks'));
             bundle.provideTechData('?.files', fileList);
 
             return bundle.runTech(Tech)
@@ -332,7 +334,7 @@ describe('bh-commonjs', function () {
                 })
                 .then(function () {
                     fileList = new FileList();
-                    fileList.loadFromDirSync('blocks');
+                    fileList.addFiles(loadDirSync('blocks'));
                     bundle.provideTechData('?.files', fileList);
 
                     return bundle.runTechAndRequire(Tech);
@@ -379,7 +381,7 @@ function prepare(templates, opts) {
 
     bundle = new TestNode('bundle');
     fileList = new FileList();
-    fileList.loadFromDirSync('blocks');
+    fileList.addFiles(loadDirSync('blocks'));
     bundle.provideTechData('?.files', fileList);
 
     return bundle;

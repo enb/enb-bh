@@ -4,6 +4,7 @@ var path = require('path'),
     TestNode = require('mock-enb/lib/mock-node'),
     Tech = require('../../../techs/bh-bundle'),
     FileList = require('enb/lib/file-list'),
+    loadDirSync = require('mock-enb/utils/dir-utils').loadDirSync,
     bhCoreFilename = require.resolve('bh/lib/bh.js'),
     writeFile = require('../../lib/write-file'),
     EOL = require('os').EOL;
@@ -240,7 +241,7 @@ describe('bh-bundle', function () {
 
             bundle = new TestNode('bundle');
             fileList = new FileList();
-            fileList.loadFromDirSync('blocks');
+            fileList.addFiles(loadDirSync('blocks'));
             bundle.provideTechData('?.files', fileList);
 
             return bundle.runTech(Tech)
@@ -252,7 +253,7 @@ describe('bh-bundle', function () {
                 })
                 .then(function () {
                     fileList = new FileList();
-                    fileList.loadFromDirSync('blocks');
+                    fileList.addFiles(loadDirSync('blocks'));
                     bundle.provideTechData('?.files', fileList);
 
                     return bundle.runTechAndRequire(Tech);
@@ -279,7 +280,7 @@ describe('bh-bundle', function () {
 
         bundle = new TestNode('bundle');
         fileList = new FileList();
-        fileList.loadFromDirSync('blocks');
+        fileList.addFiles(loadDirSync('blocks'));
         bundle.provideTechData('?.files', fileList);
 
         return bundle.runTechAndGetContent(Tech, options)
@@ -324,7 +325,7 @@ function prepare(templates, opts) {
 
     bundle = new TestNode('bundle');
     fileList = new FileList();
-    fileList.loadFromDirSync('blocks');
+    fileList.addFiles(loadDirSync('blocks'));
     bundle.provideTechData('?.files', fileList);
 
     return bundle;

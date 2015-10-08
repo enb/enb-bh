@@ -1,5 +1,7 @@
 var vow = require('vow'),
-    vfs = require('enb/lib/fs/async-fs'),
+    enb = require('enb'),
+    vfs = enb.asyncFS || require('enb/lib/fs/async-fs'),
+    buildFlow = enb.buildFlow || require('enb/lib/build-flow'),
     compile = require('../lib/compiler').compile;
 
 /**
@@ -48,7 +50,7 @@ var vow = require('vow'),
  *     });
  * };
  */
-module.exports = require('enb/lib/build-flow').create()
+module.exports = buildFlow.create()
     .name('bh-bundle')
     .target('target', '?.bh.js')
     .defineOption('bhFilename', require.resolve('bh/lib/bh.js'))
