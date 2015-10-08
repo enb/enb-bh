@@ -1,6 +1,19 @@
 История изменений
 =================
 
+1.1.0
+-----
+
+### Крупные изменения
+
+* Добавлена поддержка `enb` версии `1.x` ([#125]).
+
+### Зависимости
+
+* Модуль `browserify@11.0.1` обновлен до версии `11.2.0`.
+* Модуль `enb-source-map@1.7.2` обновлен до версии `1.8.0`.
+* Модуль `vow@0.4.10` обновлен до версии `0.4.11`.
+
 1.0.0
 -----
 
@@ -133,6 +146,7 @@
 [bh#115]: https://github.com/bem/bh/pull/115
 [bh#96]: https://github.com/bem/bh/pull/96
 
+[#125]: https://github.com/enb-bem/enb-bh/pull/125
 [#119]: https://github.com/enb-bem/enb-bh/issues/119
 [#118]: https://github.com/enb-bem/enb-bh/issues/118
 [#101]: https://github.com/enb-bem/enb-bh/issues/101
