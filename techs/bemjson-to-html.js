@@ -53,6 +53,7 @@ module.exports = buildFlow.create()
     .useSourceFilename('bhFile', '?.bh.js')
     .useSourceFilename('bemjsonFile', '?.bemjson.js')
     .builder(function (bhFilename, bemjsonFilename) {
+        var _this = this;
         clearRequire(bemjsonFilename);
 
         return requireOrEval(bemjsonFilename)
@@ -61,8 +62,13 @@ module.exports = buildFlow.create()
 
                 return asyncRequire(bhFilename)
                     .then(function (BH) {
-                        return BH.apply(json);
+                        return _this.render(BH, json);
                     });
         });
+    })
+    .methods({
+        render: function (BH, bemjson) {
+            return BH.apply(bemjson);
+        }
     })
     .createTech();
