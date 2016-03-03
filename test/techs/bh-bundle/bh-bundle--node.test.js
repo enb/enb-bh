@@ -11,6 +11,7 @@ var path = require('path'),
 
 describe('bh-bundle --node', function () {
     afterEach(function () {
+        delete global.text;
         mock.restore();
     });
 
@@ -62,7 +63,7 @@ describe('bh-bundle --node', function () {
                         }
                     }
                 },
-                lib = 'this.text = "Hello world!";';
+                lib = 'global.text = "Hello world!";';
 
             return build(templates, options, lib)
                 .then(function (BH) {
@@ -83,7 +84,7 @@ describe('bh-bundle --node', function () {
                         }
                     }
                 },
-                lib = 'this.text = {value: "Hello world!"};';
+                lib = 'global.text = {value: "Hello world!"};';
 
             return build(templates, options, lib)
                 .then(function (BH) {
