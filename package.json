@@ -2,7 +2,7 @@
   "author": "Andrew Abramov <mail@blond.im>",
   "description": "BH support for ENB",
   "name": "enb-bh",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "repository": "git://github.com/enb-bem/enb-bh",
   "homepage": "https://github.com/enb-bem/enb-bh",
   "bugs": "https://github.com/enb-bem/enb-bh/issues",
