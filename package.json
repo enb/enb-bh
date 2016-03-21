@@ -3,13 +3,13 @@
   "description": "BH support for ENB",
   "name": "enb-bh",
   "version": "1.2.0",
-  "repository": "git://github.com/enb-bem/enb-bh",
-  "homepage": "https://github.com/enb-bem/enb-bh",
-  "bugs": "https://github.com/enb-bem/enb-bh/issues",
+  "repository": "git://github.com/enb/enb-bh",
+  "homepage": "https://github.com/enb/enb-bh",
+  "bugs": "https://github.com/enb/enb-bh/issues",
   "licenses": [
     {
       "type": "MPL-2.0",
-      "url": "https://github.com/enb-bem/enb-bh/blob/master/LICENSE.txt"
+      "url": "https://github.com/enb/enb-bh/blob/master/LICENSE.txt"
     }
   ],
   "contributors": [

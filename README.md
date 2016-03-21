@@ -2,12 +2,12 @@ enb-bh
 ======
 
 [![NPM version](https://img.shields.io/npm/v/enb-bh.svg?style=flat)](https://www.npmjs.org/package/enb-bh)
-[![Build Status](https://img.shields.io/travis/enb-bem/enb-bh/master.svg?style=flat&label=tests)](https://travis-ci.org/enb-bem/enb-bh)
+[![Build Status](https://img.shields.io/travis/enb/enb-bh/master.svg?style=flat&label=tests)](https://travis-ci.org/enb/enb-bh)
 [![Build status](https://img.shields.io/appveyor/ci/blond/enb-bh.svg?style=flat&label=windows)](https://ci.appveyor.com/project/blond/enb-bh)
-[![Coverage Status](https://img.shields.io/coveralls/enb-bem/enb-bh.svg?style=flat)](https://coveralls.io/r/enb-bem/enb-bh?branch=master)
-[![Dependency Status](https://img.shields.io/david/enb-bem/enb-bh.svg?style=flat)](https://david-dm.org/enb-bem/enb-bh)
+[![Coverage Status](https://img.shields.io/coveralls/enb/enb-bh.svg?style=flat)](https://coveralls.io/r/enb/enb-bh?branch=master)
+[![Dependency Status](https://img.shields.io/david/enb/enb-bh.svg?style=flat)](https://david-dm.org/enb/enb-bh)
 
-Пакет предоставляет набор [ENB](https://ru.bem.info/tools/bem/enb-bem/)-технологий для сборки BH-шаблонов в проектах, построенных по [методологии БЭМ](https://ru.bem.info/method/).
+Пакет предоставляет набор [ENB](https://ru.bem.info/tools/bem/enb/)-технологий для сборки BH-шаблонов в проектах, построенных по [методологии БЭМ](https://ru.bem.info/method/).
 
 **Технологии пакета `enb-bh`:**
 
